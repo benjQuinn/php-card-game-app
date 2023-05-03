@@ -1,0 +1,18 @@
+{
+    "name": "root/card-game-app",
+    "authors": [
+        {
+            "name": "Ben Quinn",
+            "email": "ben.quinn@procure-plus.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^9.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "CardGameApp\\": "src/",
+            "Tests\\": "tests/"
+        }
+    }
+}
