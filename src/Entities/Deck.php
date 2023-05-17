@@ -9,6 +9,10 @@ class Deck {
         $this->createDeck();
     }
 
+    /**
+     * Creates a 54 deck of cards. 2-10, Ace, Jack, King Queen of each suit and two Joker cards and adds them to $cards property
+     * @return void
+     */
     public function createDeck() {
         $suits = ["Spades", "Clubs", "Hearts", "Diamonds"];
         $faces = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "King", "Queen"];
@@ -48,7 +52,8 @@ class Deck {
                 ]);
             }
         }
-        // then adds two jokers to the deck
+
+        // Adds two jokers to the deck
         $joker = new Card(
             [
                 "suit" => "N/A",
@@ -61,11 +66,11 @@ class Deck {
         array_push($this->cards, $joker, $joker);
     }
 
+    /**
+     * Returns the cards in the deck
+     * @return array
+     */
     public function getCards(): array {
         return $this->cards;
-    }
-
-    public function getDeckCount(): int {
-        return count($this->cards);
     }
 }

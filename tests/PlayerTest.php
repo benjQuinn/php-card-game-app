@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests;
-
 use CardGameApp\Entities\Player;
 use PHPUnit\Framework\TestCase;
 

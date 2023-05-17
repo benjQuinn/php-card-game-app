@@ -21,12 +21,12 @@ class Card {
         return $this->suit;
     }
 
-    public function getFace(): string {
-        return $this->face;
-    }
-
     public function getValue(): int {
         return $this->value;
+    }
+
+    public function getFace(): string {
+        return $this->face;
     }
 
     public function isAce(): string {
@@ -37,7 +37,6 @@ class Card {
         return $this->isJoker;
     }
 
-    // might not need
     public function changeCardValue(string $key, $value) {
         $this->$key = $value;
     }

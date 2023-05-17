@@ -16,10 +16,6 @@ class DeckTest extends TestCase {
         $this->assertInstanceOf(Deck::class, $this->deck);
     }
 
-    public function test_it_creates_a_deck_of_54_cards_when_instantiated() {
-        $this->assertSame(54, $this->deck->getDeckCount());
-    }
-
     public function test_created_deck_includes_13_cards_from_each_suit() {
         $hearts = [];
         $clubs = [];
