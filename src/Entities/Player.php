@@ -12,6 +12,16 @@ class Player {
     private bool $isLeader = false;
 
     public function __construct(string $name) {
+        /**
+         * MB: You've correctly understood how static
+         * you shouldn't use static within an instance object, to store global state. This could be dangerous.
+         * As a principle, you don't really want to be coupled to a global state that can be mutated.
+         * This class is being coupled to other players. If Player needs to know its number, then you should pass it in.
+         * If we wanted the player object to have agency in deciding what player number it is, (for example; rock-paper-scissors)
+         * then we could give each player object, a reference to the other and do something like :
+         * $p1->addOpponent($p2);
+         * */
+
         // first player that's instantiated will be playerNumber = 1 and this will increment every time a new player is instantiated
         $this->playerNumber = self::$counter++;
         $this->name = $name;
