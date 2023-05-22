@@ -1,12 +1,13 @@
 <?php
 
+use CardGameApp\Entities\Cards\Joker;
 use CardGameApp\Entities\GameController;
 use CardGameApp\Entities\Player;
 use CardGameApp\Entities\Table;
 
 // MB: "vendor/autoload.php" is relative to where you run it, you want
 //  __DIR__."/vendor/autoload.php" or APP_ROOT."/vendor/autoload.php"
-require_once realpath("vendor/autoload.php");
+require_once __DIR__ . '/vendor/autoload.php';
 
 $players = [
     new Player("Ben"),
@@ -17,10 +18,12 @@ $players = [
     new Player("Anestis"),
     new Player("Annesley")
 ];
+
 /** MB: Example:A code example for point in deck.php __Construct */
 $d = new \CardGameApp\Entities\Deck();
-$d->getCards()[53]->changeCardValue('value',45);
-foreach($d->getCards() as $i=>$c){
+$d->add(new Joker());
+
+foreach($d as $i=>$c){
     echo $i.">".$c->getSuit() . " - ".$c->getFace()." = ".$c->getValue()."\n";
 }
 exit;

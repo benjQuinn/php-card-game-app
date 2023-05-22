@@ -45,6 +45,8 @@ class Table {
          * this func could take 2 string R/P/S choices and return 1 or 2 for which is the winner.
          * There is many ways to implement decideRPSWin(), but the importance is to encapsulate the evaluation
          * maybe you could have a go at this
+         *
+         * WORK TO DO
          */
         // if first player wins they become the leader
         if ($firstPlayerRPS === "rock" && $secondPlayerRPS === "scissors" ||
