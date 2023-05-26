@@ -2,7 +2,7 @@
 
 namespace CardGameApp\Entities\Cards;
 
-class Joker extends Card implements \CardGameApp\Entities\Cards\CardInterface
+class Joker extends Card
 {
     public function __construct()
     {

@@ -1,13 +1,11 @@
 <?php
 
-use CardGameApp\Entities\Cards\Joker;
 use CardGameApp\Entities\GameController;
 use CardGameApp\Entities\Player;
 use CardGameApp\Entities\Table;
 
-// MB: "vendor/autoload.php" is relative to where you run it, you want
-//  __DIR__."/vendor/autoload.php" or APP_ROOT."/vendor/autoload.php"
-require_once __DIR__ . '/vendor/autoload.php';
+const APP_ROOT = __DIR__;
+require_once APP_ROOT . '/vendor/autoload.php';
 
 $players = [
     new Player("Ben"),
@@ -19,24 +17,25 @@ $players = [
     new Player("Annesley")
 ];
 
-/** MB: Example:A code example for point in deck.php __Construct */
-$d = new \CardGameApp\Entities\Deck();
-$d->add(new Joker());
+// starts game with two random players
+function start($players): string
+{
+    $randIndexOne = rand(0, 6);
+    $randIndexTwo = rand(0, 6);
 
-foreach($d as $i=>$c){
-    echo $i.">".$c->getSuit() . " - ".$c->getFace()." = ".$c->getValue()."\n";
+    if ($randIndexOne !== $randIndexTwo) {
+        $firstPlayer = $players[$randIndexOne];
+        $secondPlayer = $players[$randIndexTwo];
+
+        $table = new Table([$firstPlayer, $secondPlayer]);
+
+        $gameController = new GameController($table);
+        $table->deck->shuffle();
+
+        return $gameController->runGame();
+    } else {
+        return start($players);
+    }
 }
-exit;
 
-// adds random players to the table each time that app file is run
-$table = new Table([$players[rand(0, 6)], $players[rand(0, 6)]]);
-
-$gameController = new GameController($table);
-
-echo PHP_EOL;
-
-echo $gameController->runGame();
-
-echo PHP_EOL;
-
-$gameController->restartGame();
+echo start($players);

@@ -1,8 +1,8 @@
 <?php
 
-namespace CardGameApp\Entities;
+namespace CardGameApp\Entities\Collections;
 
-use CardGameApp\Entities\Cards\CardInterface;
+use CardGameApp\Entities\Cards\Card;
 use Traversable;
 
 abstract class CardsCollection implements \IteratorAggregate
@@ -14,12 +14,12 @@ abstract class CardsCollection implements \IteratorAggregate
         return new \ArrayIterator($this->cards);
     }
 
-    public function add(CardInterface $card)
+    public function add(Card $card)
     {
         $this->cards[] = $card;
     }
 
-    public function remove(CardInterface $card)
+    public function remove(Card $card)
     {
         $index = array_search($card, $this->cards);
         unset($this->cards[$index]);
@@ -32,7 +32,8 @@ abstract class CardsCollection implements \IteratorAggregate
 
     public function sort()
     {
-        usort($this->cards, function ($a, $b) {
+        usort($this->cards, function ($a, $b)
+        {
             return $a->getValue() - $b->getValue();
         });
     }
@@ -41,15 +42,29 @@ abstract class CardsCollection implements \IteratorAggregate
     {
         $filteredCards = [];
 
-        foreach ($this->cards as $card) {
-            if ($card->getSuit() === $suit) {
+        foreach ($this->cards as $card)
+        {
+            if ($card->getSuit() === $suit)
+            {
                 $filteredCards[] = $card;
             }
         }
         return $filteredCards;
     }
 
-    public function count(): int {
+    public function count(): int
+    {
         return count($this->cards);
     }
+
+    public function getCards(): array
+    {
+        return $this->cards;
+    }
+
+    public function resetCardsArrayIndex()
+    {
+        $this->cards = array_values($this->cards);
+    }
+
 }

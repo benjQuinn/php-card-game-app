@@ -2,11 +2,13 @@
 
 namespace CardGameApp\Entities;
 
+use CardGameApp\Entities\Collections\Deck;
+use CardGameApp\Entities\Collections\Pile;
+
 class Table {
-    private array $players;
-    private Deck $deck;
-    private array $cards;
-    private array $playedCards = [];
+    public array $players;
+    public Deck $deck;
+    public Pile $playedCards;
     private int $currentLeader = 0;
     private int $currentRound = 0;
 
@@ -17,16 +19,9 @@ class Table {
             $players[1]->getPlayerNumber() => $players[1]
         ];
         $this->deck = new Deck();
-        $this->cards = $this->deck->getCards();
+        $this->playedCards = new Pile();
     }
 
-    /**
-     * Shuffles the cards in the playing deck
-     * @return void
-     */
-    private function shuffleCards() {
-        shuffle($this->cards);
-    }
 
     /**
      * Decides the winner of rock-paper-scissors. Order of params has no effect on the outcome
@@ -87,7 +82,7 @@ class Table {
      */
     public function setUp(): int {
         $this->cards = $this->deck->getCards();
-        $this->shuffleCards();
+        $this->deck->shuffle();
 
         $winner = $this->decideRockPaperScissorsWinner(...$this->players);
         $this->currentLeader = $winner;
@@ -105,28 +100,18 @@ class Table {
     /** Returns the top card from the playing deck
      * @return mixed|null no need to validate for empty deck as the game will end if this is the case
      */
-    private function draw() {
+    public function draw() {
         // Returns the top card of the deck
         // no need to validate for empty deck as the game will end if this is the case
-        return array_pop($this->cards);
-    }
-
-    /**
-     * Gives each player a given number of cards to their hand
-     * @param int $cards number of cards each player receives - defaulted at 13
-     * @return void
-     */
-    public function drawCards(int $cards = 13) {
-        /**
-         * MB: If we assume that the Player object is the object with Agency and the Table is a world object, then this feels
-         * like the table is acting on the player. Maybe this should live in the Player object. If we try to model things as close
-         * to the real world, then it makes code easier for other devs to pick up.
-         */
-        foreach ($this->players as $player) {
-            for ($i = 0; $i < $cards; $i++) {
-                $player->receiveCardToHand($this->draw());
-            }
+        $cards = $this->deck->getCards();
+        $card = array_pop($cards);
+//
+        if (!empty($this->deck->getCards()))
+        {
+            $this->deck->remove($card);
         }
+        return $card;
+
     }
 
     /**
@@ -150,48 +135,12 @@ class Table {
     }
 
     /**
-     * Receives a card and adds it to its played cards array
-     * @param Card $card gets the leaders card from the players playCard method and they opponents card from the tables play method
-     * @return void
-     */
-    public function receivePlayedCard(Card $card) {
-        $this->playedCards[] = $card;
-    }
-
-    /**
-     * Returns the string of the leaders card which is the first played card. Player uses this to filter their cards
-     * @return string the suit of the leaders card
-     */
-    public function getLeadersPlayedCardSuit(): string {
-        /**
-         * MB: Code is fine. This is more of a design comment.
-         * Here, you've effectively created wrapper func, that querying a specific attribute of an object's child. This
-         * can sometimes be fine/ good, especially if we're encapsulating really complicated logic, to retrieve an answer,
-         * such as $order->greenSpend(), which rolls of all items, checks if they are eco products and sums up their qty x gross.
-         * However, in most scenarios, we want to avoid wrappers and make the object attribute available.
-         * Its a balance between:
-         *  - have we exposed something really useful for other devs or is it niche/bloat
-         *  - have we simplified a complicated thing for other devs to re-use
-         *  - SHOULD the data be exposed, given the apps rules/domain
-         *
-         * These are often the hard questions to think about, when designing. It might seem inconsequential here, but this theory
-         * has a domino effect on large code bases.
-         *
-         * I think we probably want $table->getLeadersPlayedCard() or $table->getFirstPlayedCard() which returns a card object.
-         * this gives the consumer more flexibility on the questions they want to ask, without writing many wrappers. For example,
-         * what if we now want to know the card face of the leaders card, or if it was a joker etc.
-         *
-         */
-        // get leaders card which is the first played card. Player uses this for the filterCards() logic
-        return array_slice($this->playedCards, 0, 1)[0]->getSuit();
-    }
-
-    /**
      * Returns the two played cards
      * @return array of cards
      */
-    public function pickUp(): array {
-        return $this->playedCards;
+    public function getPlayedCards(): array
+    {
+        return $this->playedCards->getCards();
     }
 
     /**
@@ -206,7 +155,7 @@ class Table {
         $leadersPlayedCard = $leader->playCard($this);
         $opponentsPlayedCard = $opponent->playCard($this);
         // adds opponents played card to the playedCards pile
-        $this->playedCards[] = $opponentsPlayedCard;
+        $this->playedCards->add($opponentsPlayedCard);
 
         // if leader has the highest value card they remain the leader
         if ($leadersPlayedCard->getValue() > $opponentsPlayedCard->getValue()) {
@@ -218,7 +167,8 @@ class Table {
         }
         // if both cards played have the same value, they are removed from the game and both players play another card
         if ($leadersPlayedCard->getValue() === $opponentsPlayedCard->getValue()) {
-            $this->playedCards = [];
+            $this->playedCards->remove($leadersPlayedCard);
+            $this->playedCards->remove($opponentsPlayedCard);
             return $this->play($leader, $opponent);
         }
         // returns the winner of the round
@@ -231,7 +181,7 @@ class Table {
      */
     public function initialiseTable() {
         $this->cards = [];
-        $this->playedCards = [];
+        $this->playedCards = new Pile();
         $this->currentLeader = 0;
         $this->currentRound = 0;
     }
@@ -250,7 +200,7 @@ class Table {
      */
     public function doPlayersHaveCards(): bool {
         foreach ($this->players as $player) {
-            if ($player->getHandCount() === 0) {
+            if ($player->hand->count() === 0) {
                 return false;
             }
         }

@@ -18,35 +18,45 @@ class GameController {
     public function runGame(): string {
         //table is set up and 13 cards are drawn to both players
         $this->table->setUp();
-        $this->table->drawCards();
+
+        foreach ($this->table->players as $player)
+        {
+            $player->drawCards($this->table, 13);
+        }
 
         echo PHP_EOL . PHP_EOL;
 
         while ($this->table->doPlayersHaveCards() && $this->table->getCurrentRound() <= 27) {
-
             $leader = $this->players[$this->table->whoIsLeader()];
             $opponent = $this->players[$this->table->whoIsNotLeader()];
 
             $roundWinner = $this->table->play($leader, $opponent);
-            $currentRound = $this->table->getCurrentRound();
 
             // displays the winner of each round
-            echo "Round $currentRound winner: Player $roundWinner" . PHP_EOL;
+            echo "Round ".$this->table->getCurrentRound()." winner: Player $roundWinner".PHP_EOL;
 
             // round winner picks up the two played cards and adds them to their score pile
-            $this->players[$roundWinner]->receiveCardToScorePile($this->table->pickUp()[0]);
-            $this->players[$roundWinner]->receiveCardToScorePile($this->table->pickUp()[1]);
+            foreach ($this->table->getPlayedCards() as $card) {
+                // add played card to winner's score pile
+                $this->players[$roundWinner]->scorePile->add($card);
+                // and remove it from the table's played cards pile
+                $this->table->playedCards->remove($card);
+            }
 
             // after the winner picks up the played cards from this round, each player gets a new card from the deck IF the deck is not empty
-            if (!empty($this->table->getCards())) {
-                $this->table->drawCards(1);
+            var_dump(count($this->table->deck->getCards()));
+            if (!empty($this->table->deck->getCards())) {
+               foreach ($this->table->players as $player)
+               {
+                   $player->drawCards($this->table, 1);
+               }
             }
         }
 
         echo PHP_EOL;
 
         foreach ($this->players as $player) {
-            echo "Player " . $player->getPlayerNumber() . " score: " . $player->getScorePileCount() . PHP_EOL;
+            echo "Player " . $player->getPlayerNumber() . " score: " . $player->scorePile->count() . PHP_EOL;
         }
 
         echo PHP_EOL;
@@ -63,7 +73,7 @@ class GameController {
 
         // put each players score into an array
         foreach ($this->players as $player) {
-            $scores[] = $player->getScorePileCount();
+            $scores[] = $player->scorePile->count();
         }
 
         // find the highest score in scores array
@@ -75,7 +85,7 @@ class GameController {
         } else {
             // find which player had the winning score
             foreach ($this->players as $player) {
-                if ($winningScore === $player->getScorePileCount()) {
+                if ($winningScore === $player->scorePile->count()) {
                     $resultStr .= "Player " . $player->getPlayerNumber() . " (" . $player->getName() . ") is the winner!";
                 }
             }

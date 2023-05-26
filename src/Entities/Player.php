@@ -2,13 +2,17 @@
 
 namespace CardGameApp\Entities;
 
+use CardGameApp\Entities\Cards\Card;
+use CardGameApp\Entities\Collections\Hand;
+use CardGameApp\Entities\Collections\Pile;
+
 class Player {
     private static int $counter = 1;
 
     private int $playerNumber;
     private string $name;
-    private array $hand = [];
-    private array $scorePile = [];
+    public Hand $hand;
+    public Pile $scorePile;
     private bool $isLeader = false;
 
     public function __construct(string $name) {
@@ -25,33 +29,8 @@ class Player {
         // first player that's instantiated will be playerNumber = 1 and this will increment every time a new player is instantiated
         $this->playerNumber = self::$counter++;
         $this->name = $name;
-    }
-
-    /**
-     * Sorts cards in the players hand in ascending order
-     * @return void
-     */
-    private function sortHand() {
-        usort($this->hand, function ($a, $b) {
-            return $a->getValue() - $b->getValue();
-        });
-    }
-
-    /**
-     * Filters players cards to match a given suit
-     * @param string $suit e.g "Clubs"
-     * @return array array of the filtered cards
-     */
-    private function filterCards(string $suit): array {
-        // filter cards to match the given suit
-        $filteredCards = [];
-
-        foreach ($this->hand as $card) {
-            if ($card->getSuit() === $suit) {
-                $filteredCards[] = $card;
-            }
-        }
-        return $filteredCards;
+        $this->hand = new Hand();
+        $this->scorePile = new Pile();
     }
 
     /**
@@ -75,43 +54,12 @@ class Player {
         return $rps[$randomIndex];
     }
 
-    public function getHandCount(): int {
-        return count($this->hand);
-    }
-
-    public function getScorePileCount(): int {
-        return count($this->scorePile);
-    }
-
     public function getName(): string {
         return $this->name;
     }
 
     public function getPlayerNumber(): int {
         return $this->playerNumber;
-    }
-
-    public function getIsLeader(): bool {
-        return $this->isLeader;
-    }
-
-    /**
-     * Receives a given card and adds to its hand
-     * @param Card $card
-     * @return void
-     */
-    public function receiveCardToHand(Card $card) {
-        // takes card from the top of deck, provided by the Table object, and adds it to players hand 13 times
-        $this->hand[] = $card;
-    }
-
-    /**
-     * Receives a given card and adds it to its score pile
-     * @param Card $card
-     * @return void
-     */
-    public function receiveCardToScorePile(Card $card) {
-        $this->scorePile[] = $card;
     }
 
     /**
@@ -123,30 +71,34 @@ class Player {
 
         $this->updateLeader($table);
         // sort cards in ascending order
-        $this->sortHand();
+        $this->hand->sort();
+
+        $hand = $this->hand->getCards();
 
         if (!$this->isLeader) {
             // get the card the leader has just played
-            $opponentsPlayedCardSuit = $table->getLeadersPlayedCardSuit();
+            $playedCards = $table->playedCards->getCards();
+            $leadersPlayedCard = reset($playedCards);
+
             // filters hand to only show cards that match suit of the played card
-            $filteredHand = $this->filterCards($opponentsPlayedCardSuit);
+            $filteredHand = $this->hand->filter($leadersPlayedCard->getSuit());
 
             if (empty($filteredHand)) {
                 // if player has no card matching suit, they strategically play their lowest value card from their hand
-                $card = array_shift($this->hand);
+                $card = array_shift($hand);
             } else {
                 // else they play their highest value matching card
                 $card = array_pop($filteredHand);
-                // the played card is removed from the hand
-                $index = array_search($card, $this->hand);
-                unset($this->hand[$index]);
             }
 
         } else {
             // if player is the leader they play their highest value card
-            $card = array_pop($this->hand);
-            $table->receivePlayedCard($card);
+            $card = array_pop($hand);
+
+            $table->playedCards->add($card);
         }
+
+        $this->hand->remove($card);
         return $card;
     }
 
@@ -155,8 +107,26 @@ class Player {
      * @return void
      */
     public function initialisePlayer() {
-        $this->hand = [];
-        $this->scorePile = [];
+        $this->hand = new Hand();
+        $this->scorePile = new Pile();
         $this->isLeader = false;
+    }
+
+    /**
+     * @param Table $table
+     * @param int $cards
+     * @return void
+     */
+    public function drawCards(Table $table, int $cards)
+    {
+        for ($i = 0; $i < $cards; $i++)
+        {
+            $this->hand->add($table->draw());
+        }
+    }
+
+    public function getScorePile(): array
+    {
+        return $this->scorePile->getCards();
     }
 }

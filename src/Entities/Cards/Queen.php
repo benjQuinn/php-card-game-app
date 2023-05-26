@@ -1,8 +1,6 @@
 <?php
 namespace CardGameApp\Entities\Cards;
 
-use CardGameApp\Entities\Cards\Card;
-
 class Queen extends Card
 {
     public function __construct(string $suit)
