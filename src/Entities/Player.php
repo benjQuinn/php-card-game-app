@@ -93,12 +93,18 @@ class Player {
 
         } else {
             // if player is the leader they play their highest value card
-            $card = array_pop($hand);
-
-            $table->playedCards->add($card);
+            if (!empty($hand))
+            {
+                $card = array_pop($hand);
+                $table->playedCards->add($card);
+            }
         }
 
-        $this->hand->remove($card);
+        if (!empty($hand))
+        {
+            $this->hand->remove($card);
+        }
+
         return $card;
     }
 

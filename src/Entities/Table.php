@@ -9,7 +9,7 @@ class Table {
     public array $players;
     public Deck $deck;
     public Pile $playedCards;
-    private int $currentLeader = 0;
+    public int $currentLeader = 0;
     private int $currentRound = 0;
 
     public function __construct(array $players) {
@@ -74,27 +74,6 @@ class Table {
 
     public function getPlayers(): array {
         return $this->players;
-    }
-
-    /**
-     * Resets the table (deck is filled back to 54 and shuffled). It also determines who wins rock-paper-scissors and starts the game as leader
-     * @return int the player number of the leader
-     */
-    public function setUp(): int {
-        $this->cards = $this->deck->getCards();
-        $this->deck->shuffle();
-
-        $winner = $this->decideRockPaperScissorsWinner(...$this->players);
-        $this->currentLeader = $winner;
-        /**
-         * MB: A small nit-pick, but in apps, you generally want a UI layer and a data layer.
-         * This separates user input&feedback from your logic model. This gives you loose coupling and allows you to
-         * develop them separately without being tied together. It seems that Table,Player,Card,Deck are your model and
-         * GameController is the orchestrator and feeds back to the user. So all cmd prints, should be there.
-         * By keeping them separate, this allows to change the UI without breaking your code.
-         */
-        echo "Player $winner wins rock-paper-scissors and starts the game as leader.";
-        return $this->currentLeader;
     }
 
     /** Returns the top card from the playing deck

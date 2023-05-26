@@ -2,13 +2,25 @@
 
 namespace CardGameApp\Entities;
 
+use CardGameApp\Entities\Pregames\PregameInterface;
+
 class GameController {
     private Table $table;
     private array $players;
+    protected PregameInterface $pregame;
+    // private Pregame $pregame
 
-    public function __construct(Table $table) {
+    public function __construct(Table $table, PregameInterface $pregame) {
         $this->table = $table;
         $this->players = $this->table->getPlayers();
+        $this->pregame = $pregame;
+    }
+
+    public function setUp(): int {
+        $winner = $this->pregame->decideLeader(...$this->players);
+        $this->table->currentLeader = $winner;
+
+        return $this->table->currentLeader;
     }
 
     /**
@@ -16,15 +28,10 @@ class GameController {
      * @return string
      */
     public function runGame(): string {
-        //table is set up and 13 cards are drawn to both players
-        $this->table->setUp();
-
         foreach ($this->table->players as $player)
         {
             $player->drawCards($this->table, 13);
         }
-
-        echo PHP_EOL . PHP_EOL;
 
         while ($this->table->doPlayersHaveCards() && $this->table->getCurrentRound() <= 27) {
             $leader = $this->players[$this->table->whoIsLeader()];
@@ -33,7 +40,7 @@ class GameController {
             $roundWinner = $this->table->play($leader, $opponent);
 
             // displays the winner of each round
-            echo "Round ".$this->table->getCurrentRound()." winner: Player $roundWinner".PHP_EOL;
+            echo "Round ".$this->table->getCurrentRound()." winner: Player $roundWinner".PHP_EOL.PHP_EOL;
 
             // round winner picks up the two played cards and adds them to their score pile
             foreach ($this->table->getPlayedCards() as $card) {
@@ -44,7 +51,6 @@ class GameController {
             }
 
             // after the winner picks up the played cards from this round, each player gets a new card from the deck IF the deck is not empty
-            var_dump(count($this->table->deck->getCards()));
             if (!empty($this->table->deck->getCards())) {
                foreach ($this->table->players as $player)
                {
@@ -52,8 +58,6 @@ class GameController {
                }
             }
         }
-
-        echo PHP_EOL;
 
         foreach ($this->players as $player) {
             echo "Player " . $player->getPlayerNumber() . " score: " . $player->scorePile->count() . PHP_EOL;

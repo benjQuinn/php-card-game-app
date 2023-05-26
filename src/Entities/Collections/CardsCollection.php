@@ -5,7 +5,7 @@ namespace CardGameApp\Entities\Collections;
 use CardGameApp\Entities\Cards\Card;
 use Traversable;
 
-abstract class CardsCollection implements \IteratorAggregate
+abstract class CardsCollection implements \IteratorAggregate, \Countable
 {
     protected array $cards;
 
@@ -21,8 +21,8 @@ abstract class CardsCollection implements \IteratorAggregate
 
     public function remove(Card $card)
     {
-        $index = array_search($card, $this->cards);
-        unset($this->cards[$index]);
+            $index = array_search($card, $this->cards);
+            unset($this->cards[$index]);
     }
 
     public function shuffle()
