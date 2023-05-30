@@ -5,19 +5,16 @@ namespace CardGameApp\Entities;
 use CardGameApp\Entities\Pregames\PregameInterface;
 
 class GameController {
-    private Table $table;
-    private array $players;
+    public Table $table;
     protected PregameInterface $pregame;
-    // private Pregame $pregame
 
     public function __construct(Table $table, PregameInterface $pregame) {
         $this->table = $table;
-        $this->players = $this->table->getPlayers();
         $this->pregame = $pregame;
     }
 
     public function setUp(): int {
-        $winner = $this->pregame->decideLeader(...$this->players);
+        $winner = $this->pregame->decideLeader(...$this->table->players);
         $this->table->currentLeader = $winner;
 
         return $this->table->currentLeader;
@@ -34,18 +31,28 @@ class GameController {
         }
 
         while ($this->table->doPlayersHaveCards() && $this->table->getCurrentRound() <= 27) {
-            $leader = $this->players[$this->table->whoIsLeader()];
-            $opponent = $this->players[$this->table->whoIsNotLeader()];
+            $leader = $this->table->players[$this->table->whoIsLeader()];
+            $opponent = $this->table->players[$this->table->whoIsNotLeader()];
 
             $roundWinner = $this->table->play($leader, $opponent);
 
+
             // displays the winner of each round
+            $playedCards = array_values($this->table->getPlayedCards());
+
+            foreach ($playedCards as $index => $card) {
+                if ($index === 0) {
+                    echo "Player ".$leader->getPlayerNumber()." card: ".$card->getFace()." ".$card->getSuit().PHP_EOL;
+                } else {
+                    echo "Player ".$opponent->getPlayerNumber()." card: ".$card->getFace()." ".$card->getSuit().PHP_EOL;
+                }
+            }
             echo "Round ".$this->table->getCurrentRound()." winner: Player $roundWinner".PHP_EOL.PHP_EOL;
 
             // round winner picks up the two played cards and adds them to their score pile
             foreach ($this->table->getPlayedCards() as $card) {
                 // add played card to winner's score pile
-                $this->players[$roundWinner]->scorePile->add($card);
+                $this->table->players[$roundWinner]->scorePile->add($card);
                 // and remove it from the table's played cards pile
                 $this->table->playedCards->remove($card);
             }
@@ -57,9 +64,10 @@ class GameController {
                    $player->drawCards($this->table, 1);
                }
             }
+            sleep(1);
         }
 
-        foreach ($this->players as $player) {
+        foreach ($this->table->players as $player) {
             echo "Player " . $player->getPlayerNumber() . " score: " . $player->scorePile->count() . PHP_EOL;
         }
 
@@ -76,7 +84,7 @@ class GameController {
         $scores = [];
 
         // put each players score into an array
-        foreach ($this->players as $player) {
+        foreach ($this->table->players as $player) {
             $scores[] = $player->scorePile->count();
         }
 
@@ -88,7 +96,7 @@ class GameController {
             $resultStr .= "It's a tie!";
         } else {
             // find which player had the winning score
-            foreach ($this->players as $player) {
+            foreach ($this->table->players as $player) {
                 if ($winningScore === $player->scorePile->count()) {
                     $resultStr .= "Player " . $player->getPlayerNumber() . " (" . $player->getName() . ") is the winner!";
                 }
@@ -105,7 +113,7 @@ class GameController {
         // initialise table properties
         $this->table->initialiseTable();
         // initialise both player properties
-        foreach ($this->players as $player) {
+        foreach ($this->table->players as $player) {
             $player->initialisePlayer();
         }
     }

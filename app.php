@@ -37,21 +37,19 @@ function start($players, $pregames): string
         $secondPlayer = $players[$randIndexTwo];
 
         $table = new Table([$firstPlayer, $secondPlayer]);
-
-        $table->deck->shuffle();
-
         $gameController = new GameController($table, $pregame);
-        $gameController->setUp();
-        echo "Player $table->currentLeader wins $pregame->name and starts the game as leader!";
 
+        $gameController->setUp();
+
+        echo "Player $table->currentLeader wins $pregame->name and starts the game as leader!";
         echo PHP_EOL.PHP_EOL;
 
         $table->deck->shuffle();
-        echo "The deck is shuffled...";
 
+        echo "The deck is shuffled...";
         echo PHP_EOL.PHP_EOL;
-        
         echo "Begin!".PHP_EOL;
+
         return $gameController->runGame();
     } else {
         return start($players, $pregames);
