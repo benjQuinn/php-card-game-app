@@ -73,8 +73,6 @@ class Player {
         // sort cards in ascending order
         $this->hand->sort();
 
-        $hand = $this->hand->getCards();
-
         if (!$this->isLeader) {
             // get the card the leader has just played
             $playedCards = $table->playedCards->getCards();
@@ -85,7 +83,7 @@ class Player {
 
             if (empty($filteredHand)) {
                 // if player has no card matching suit, they strategically play their lowest value card from their hand
-                $card = array_shift($hand);
+                $card = $this->hand->returnFirstCard();
             } else {
                 // else they play their highest value matching card
                 $card = array_pop($filteredHand);
@@ -93,29 +91,14 @@ class Player {
 
         } else {
             // if player is the leader they play their highest value card
-            if (!empty($hand))
+            if (!$this->hand->isEmpty())
             {
-                $card = array_pop($hand);
+                $card = $this->hand->returnLastCard();
                 $table->playedCards->add($card);
             }
         }
 
-        if (!empty($hand))
-        {
-            $this->hand->remove($card);
-        }
-
         return $card;
-    }
-
-    /**
-     * Initialises the players properties - used when restarting the game
-     * @return void
-     */
-    public function initialisePlayer() {
-        $this->hand = new Hand();
-        $this->scorePile = new Pile();
-        $this->isLeader = false;
     }
 
     /**
@@ -131,8 +114,18 @@ class Player {
         }
     }
 
-    public function getScorePile(): array
+    public function changePlayerNumber(int $number)
     {
-        return $this->scorePile->getCards();
+        $this->playerNumber = $number;
+    }
+
+    /**
+     * Initialises the players properties - used when restarting the game
+     * @return void
+     */
+    public function initialisePlayer() {
+        $this->hand = new Hand();
+        $this->scorePile = new Pile();
+        $this->isLeader = false;
     }
 }

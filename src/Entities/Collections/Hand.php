@@ -2,8 +2,17 @@
 
 namespace CardGameApp\Entities\Collections;
 
+use CardGameApp\Entities\Cards\Card;
+
 class Hand extends CardsCollection
 {
-    // one issue is that Hand inherits getCards() function - player's hand shouldn't be public
-    // need to fix this
+    public function returnLastCard(): Card
+    {
+        return array_pop($this->cards);
+    }
+
+    public function returnFirstCard(): Card
+    {
+        return array_shift($this->cards);
+    }
 }

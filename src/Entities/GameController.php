@@ -36,9 +36,9 @@ class GameController {
 
             $roundWinner = $this->table->play($leader, $opponent);
 
-
             // displays the winner of each round
-            $playedCards = array_values($this->table->getPlayedCards());
+            $this->table->playedCards->resetCardsArrayIndex();
+            $playedCards = $this->table->getPlayedCards();
 
             foreach ($playedCards as $index => $card) {
                 if ($index === 0) {

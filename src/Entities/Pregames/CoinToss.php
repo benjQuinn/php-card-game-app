@@ -8,14 +8,13 @@ class CoinToss implements PregameInterface
 {
     public string $name = "Heads or Tails?";
     public Player $winner;
+    private array $coin = ["heads", "tails"];
 
     private function play(Player $firstPlayer, Player $secondPlayer) {
-        $coin = ["heads", "tails"];
+        $firstPlayerChoice = $this->coin[rand(0, 1)];
+        $secondPlayerChoice = $this->coin[rand(0, 1)];
 
-        $firstPlayerChoice = $coin[rand(0, 1)];
-        $secondPlayerChoice = $coin[rand(0, 1)];
-
-        $toss = $coin[rand(0, 1)];
+        $toss = $this->coin[rand(0, 1)];
 
         if ($firstPlayerChoice === $toss && $secondPlayerChoice !== $toss)
         {

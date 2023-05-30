@@ -37,6 +37,7 @@ function start($players, $pregames): string
         $secondPlayer = $players[$randIndexTwo];
 
         $table = new Table([$firstPlayer, $secondPlayer]);
+
         $gameController = new GameController($table, $pregame);
 
         $gameController->setUp();

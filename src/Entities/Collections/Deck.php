@@ -8,12 +8,18 @@ use CardGameApp\Entities\Cards\Joker;
 use CardGameApp\Entities\Cards\King;
 use CardGameApp\Entities\Cards\Numeral;
 use CardGameApp\Entities\Cards\Queen;
+use Traversable;
 
-class Deck extends CardsCollection
+class Deck extends CardsCollection implements \IteratorAggregate
 {
     public function __construct()
     {
         $this->createDeck();
+    }
+
+    public function getIterator(): Traversable
+    {
+        return new \ArrayIterator($this->cards);
     }
 
     /**

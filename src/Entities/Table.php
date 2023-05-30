@@ -22,60 +22,6 @@ class Table {
         $this->playedCards = new Pile();
     }
 
-
-    /**
-     * Decides the winner of rock-paper-scissors. Order of params has no effect on the outcome
-     * @param Player $firstPlayer
-     * @param Player $secondPlayer
-     * @return int the player number of the winning player
-     */
-    private function decideRockPaperScissorsWinner(Player $firstPlayer, Player $secondPlayer): int {
-
-        $firstPlayerRPS = $firstPlayer->generateRockPaperScissors();
-        $secondPlayerRPS = $secondPlayer->generateRockPaperScissors();
-        /**
-         * MB: we have an IF statement repeated 3 times here. What we're repeating is the evaluator.
-         * ideally, we want to define the evaluation logic once and reuse. Something like :
-        function decideRPSWin($choice1,$choice2):int{}
-         * this func could take 2 string R/P/S choices and return 1 or 2 for which is the winner.
-         * There is many ways to implement decideRPSWin(), but the importance is to encapsulate the evaluation
-         * maybe you could have a go at this
-         *
-         * WORK TO DO
-         */
-        // if first player wins they become the leader
-        if ($firstPlayerRPS === "rock" && $secondPlayerRPS === "scissors" ||
-            $firstPlayerRPS === "paper" && $secondPlayerRPS === "rock" ||
-            $firstPlayerRPS === "scissors" && $secondPlayerRPS === "paper") {
-
-            // each player instance has its own number rather than 1 and 2
-            $this->currentLeader = $firstPlayer->getPlayerNumber();
-        }
-        // if second player wins they become the leader
-        if ($firstPlayerRPS === "rock" && $secondPlayerRPS === "paper" ||
-            $firstPlayerRPS === "paper" && $secondPlayerRPS === "scissors" ||
-            $firstPlayerRPS === "scissors" && $secondPlayerRPS === "rock") {
-
-            $this->currentLeader = $secondPlayer->getPlayerNumber();
-        }
-        // draw - recursively execute function until one player wins
-        if ($firstPlayerRPS === "rock" && $secondPlayerRPS === "rock" ||
-            $firstPlayerRPS === "paper" && $secondPlayerRPS === "paper" ||
-            $firstPlayerRPS === "scissors" && $secondPlayerRPS === "scissors") {
-
-            return $this->decideRockPaperScissorsWinner($firstPlayer, $secondPlayer);
-        }
-        return $this->currentLeader;
-    }
-
-    public function getCards(): array {
-        return $this->cards;
-    }
-
-    public function getPlayers(): array {
-        return $this->players;
-    }
-
     /** Returns the top card from the playing deck
      * @return mixed|null no need to validate for empty deck as the game will end if this is the case
      */
@@ -90,7 +36,6 @@ class Table {
             $this->deck->remove($card);
         }
         return $card;
-
     }
 
     /**

@@ -5,14 +5,9 @@ namespace CardGameApp\Entities\Collections;
 use CardGameApp\Entities\Cards\Card;
 use Traversable;
 
-abstract class CardsCollection implements \IteratorAggregate, \Countable
+abstract class CardsCollection
 {
     protected array $cards;
-
-    public function getIterator(): Traversable
-    {
-        return new \ArrayIterator($this->cards);
-    }
 
     public function add(Card $card)
     {
@@ -65,6 +60,11 @@ abstract class CardsCollection implements \IteratorAggregate, \Countable
     public function resetCardsArrayIndex()
     {
         $this->cards = array_values($this->cards);
+    }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->cards);
     }
 
 }
