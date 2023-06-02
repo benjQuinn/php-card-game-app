@@ -17,16 +17,19 @@ class GameController
 
     public function __construct(array $players, PregameInterface $pregame) {
         $this->pregame = $pregame;
-        $this->players = [
-            $players[0]->getPlayerNumber() => $players[0],
-            $players[1]->getPlayerNumber() => $players[1]
-        ];
+        $this->players = $players;
         $this->deck = new Deck();
         $this->playedCards = new Pile();
     }
 
     public function setUp(): int {
         $winner = $this->pregame->decideLeader(...$this->players);
+
+        $this->players = [
+            $this->players[0]->getPlayerNumber() => $this->players[0],
+            $this->players[1]->getPlayerNumber() => $this->players[1]
+        ];
+
         $this->currentLeader = $winner;
 
         return $this->currentLeader;

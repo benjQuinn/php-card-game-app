@@ -25,9 +25,13 @@ class RPS implements PregameInterface
         } if ($this->winningConditions[$firstPlayerRPS] === $secondPlayerRPS)
         {
             $this->winner = $firstPlayer;
+            $firstPlayer->changePlayerNumber(1);
+            $secondPlayer->changePlayerNumber(2);
         } else
         {
             $this->winner = $secondPlayer;
+            $secondPlayer->changePlayerNumber(1);
+            $firstPlayer->changePlayerNumber(2);
         }
     }
 

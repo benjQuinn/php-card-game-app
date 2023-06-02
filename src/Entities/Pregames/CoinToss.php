@@ -19,10 +19,14 @@ class CoinToss implements PregameInterface
         if ($firstPlayerChoice === $toss && $secondPlayerChoice !== $toss)
         {
             $this->winner = $firstPlayer;
+            $firstPlayer->changePlayerNumber(1);
+            $secondPlayer->changePlayerNumber(2);
         }
         if ($firstPlayerChoice !== $toss && $secondPlayerChoice === $toss)
         {
             $this->winner = $secondPlayer;
+            $secondPlayer->changePlayerNumber(1);
+            $firstPlayer->changePlayerNumber(2);
         }
         if ($firstPlayerChoice === $toss && $secondPlayerChoice === $toss || $firstPlayerChoice !== $toss && $secondPlayerChoice !== $toss)
         {
