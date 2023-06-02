@@ -19,25 +19,6 @@ class RPS implements PregameInterface
         $firstPlayerRPS = $firstPlayer->generateRockPaperScissors();
         $secondPlayerRPS = $secondPlayer->generateRockPaperScissors();
 
-//        if ($firstPlayerRPS === "rock" && $secondPlayerRPS === "scissors" ||
-//            $firstPlayerRPS === "paper" && $secondPlayerRPS === "rock" ||
-//            $firstPlayerRPS === "scissors" && $secondPlayerRPS === "paper") {
-//
-//            $this->winner = $firstPlayer;
-//        }
-//        if ($firstPlayerRPS === "rock" && $secondPlayerRPS === "paper" ||
-//            $firstPlayerRPS === "paper" && $secondPlayerRPS === "scissors" ||
-//            $firstPlayerRPS === "scissors" && $secondPlayerRPS === "rock") {
-//
-//            $this->winner = $secondPlayer;
-//        }
-//        if ($firstPlayerRPS === "rock" && $secondPlayerRPS === "rock" ||
-//            $firstPlayerRPS === "paper" && $secondPlayerRPS === "paper" ||
-//            $firstPlayerRPS === "scissors" && $secondPlayerRPS === "scissors") {
-//
-//            $this->play($firstPlayer, $secondPlayer);
-//        }
-
         if ($firstPlayerRPS === $secondPlayerRPS)
         {
             $this->play($firstPlayer, $secondPlayer);

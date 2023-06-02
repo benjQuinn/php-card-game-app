@@ -3,7 +3,7 @@
 use CardGameApp\Entities\GameController;
 use CardGameApp\Entities\Player;
 use CardGameApp\Entities\Pregames\CoinToss;
-use CardGameApp\Entities\Table;
+//use CardGameApp\Entities\Table;
 use CardGameApp\Entities\Pregames\RPS;
 
 const APP_ROOT = __DIR__;
@@ -36,16 +36,14 @@ function start($players, $pregames): string
         $firstPlayer = $players[$randIndexOne];
         $secondPlayer = $players[$randIndexTwo];
 
-        $table = new Table([$firstPlayer, $secondPlayer]);
-
-        $gameController = new GameController($table, $pregame);
+        $gameController = new GameController([$firstPlayer, $secondPlayer], $pregame);
 
         $gameController->setUp();
 
-        echo "Player $table->currentLeader wins $pregame->name and starts the game as leader!";
+        echo "Player $gameController->currentLeader wins $pregame->name and starts the game as leader!";
         echo PHP_EOL.PHP_EOL;
 
-        $table->deck->shuffle();
+        $gameController->deck->shuffle();
 
         echo "The deck is shuffled...";
         echo PHP_EOL.PHP_EOL;

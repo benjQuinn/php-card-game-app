@@ -3,7 +3,6 @@
 namespace CardGameApp\Entities\Collections;
 
 use CardGameApp\Entities\Cards\Card;
-use Traversable;
 
 abstract class CardsCollection
 {

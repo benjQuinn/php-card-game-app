@@ -35,12 +35,12 @@ class Player {
 
     /**
      * changes isLeader to true if whoIsLeader() on Table object returns the instances player number and vice versa
-     * @param Table $table
+     * @param GameController $gameController
      * @return void
      */
-    private function updateLeader(Table $table) {
+    private function updateLeader(GameController $gameController) {
         // changes isLeader to true if whoIsLeader() returns the instances player number and vice versa
-        $this->isLeader = $table->whoIsLeader() === $this->playerNumber;
+        $this->isLeader = $gameController->whoIsLeader() === $this->playerNumber;
     }
 
     /**
@@ -64,18 +64,18 @@ class Player {
 
     /**
      * Plays a card. This function is played whether the player is the leader or not
-     * @param Table $table
+     * @param GameController $gameController
      * @return Card
      */
-    public function playCard(Table $table): Card {
+    public function playCard(GameController $gameController): Card {
 
-        $this->updateLeader($table);
+        $this->updateLeader($gameController);
         // sort cards in ascending order
         $this->hand->sort();
 
         if (!$this->isLeader) {
             // get the card the leader has just played
-            $playedCards = $table->playedCards->getCards();
+            $playedCards = $gameController->playedCards->getCards();
             $leadersPlayedCard = reset($playedCards);
 
             // filters hand to only show cards that match suit of the played card
@@ -94,7 +94,7 @@ class Player {
             if (!$this->hand->isEmpty())
             {
                 $card = $this->hand->returnLastCard();
-                $table->playedCards->add($card);
+                $gameController->playedCards->add($card);
             }
         }
 
@@ -102,22 +102,22 @@ class Player {
     }
 
     /**
-     * @param Table $table
+     * @param GameController $gameController
      * @param int $cards
      * @return void
      */
-    public function drawCards(Table $table, int $cards)
+    public function drawCards(GameController $gameController, int $cards)
     {
         for ($i = 0; $i < $cards; $i++)
         {
-            $this->hand->add($table->draw());
+            $this->hand->add($gameController->draw());
         }
     }
 
-    public function changePlayerNumber(int $number)
-    {
-        $this->playerNumber = $number;
-    }
+//    public function changePlayerNumber(int $number)
+//    {
+//        $this->playerNumber = $number;
+//    }
 
     /**
      * Initialises the players properties - used when restarting the game
