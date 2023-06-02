@@ -3,7 +3,7 @@
 use CardGameApp\Entities\GameController;
 use CardGameApp\Entities\Player;
 use CardGameApp\Entities\Pregames\CoinToss;
-//use CardGameApp\Entities\Table;
+use CardGameApp\Entities\Printer;
 use CardGameApp\Entities\Pregames\RPS;
 
 const APP_ROOT = __DIR__;
@@ -27,6 +27,7 @@ $players = [
 // starts game with two random players and one random game to decide leader
 function start($players, $pregames): string
 {
+    $printer = new Printer();
     $pregame = $pregames[rand(0, 1)];
 
     $randIndexOne = rand(0, 6);
@@ -40,14 +41,13 @@ function start($players, $pregames): string
 
         $gameController->setUp();
 
-        echo "Player $gameController->currentLeader wins $pregame->name and starts the game as leader!";
+        echo $printer->printPregameWinner($gameController->currentLeader, $pregame->name);
         echo PHP_EOL.PHP_EOL;
 
         $gameController->deck->shuffle();
 
-        echo "The deck is shuffled...";
-        echo PHP_EOL.PHP_EOL;
-        echo "Begin!".PHP_EOL;
+        echo $printer->printStartGame();
+        echo PHP_EOL;
 
         return $gameController->runGame();
     } else {
@@ -59,4 +59,4 @@ echo PHP_EOL;
 
 echo start($players, $pregames);
 
-echo PHP_EOL.PHP_EOL;
+echo PHP_EOL;

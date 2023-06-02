@@ -136,27 +136,26 @@ class GameController
      */
     private function decideWinner(): string {
         $scores = [];
+        $printer = new Printer();
 
         // put each players score into an array
         foreach ($this->players as $player) {
             $scores[] = $player->scorePile->count();
         }
-
         // find the highest score in scores array
         $winningScore = max($scores);
         $resultStr = "";
 
         if ($scores[0] === $scores[1]) {
-            $resultStr .= "It's a tie!";
+            $resultStr .= $printer->printDraw();
         } else {
             // find which player had the winning score
             foreach ($this->players as $player) {
                 if ($winningScore === $player->scorePile->count()) {
-                    $resultStr .= "Player " . $player->getPlayerNumber() . " (" . $player->getName() . ") is the winner!";
+                    $resultStr .= $printer->printGameWinner($player->getPlayerNumber(), $player->getName());
                 }
             }
         }
-
         return $resultStr;
     }
 
@@ -165,6 +164,8 @@ class GameController
      * @return string
      */
     public function runGame(): string {
+        $printer = new Printer();
+
         foreach ($this->players as $player)
         {
             $player->drawCards($this, 13);
@@ -182,12 +183,12 @@ class GameController
 
             foreach ($playedCards as $index => $card) {
                 if ($index === 0) {
-                    echo "Player ".$leader->getPlayerNumber()." card: ".$card->getFace()." ".$card->getSuit().PHP_EOL;
+                    echo $printer->printPlayedCard($leader->getPlayerNumber(), $card->getFace(), $card->getSuit());
                 } else {
-                    echo "Player ".$opponent->getPlayerNumber()." card: ".$card->getFace()." ".$card->getSuit().PHP_EOL;
+                    echo $printer->printPlayedCard($opponent->getPlayerNumber(), $card->getFace(), $card->getSuit());
                 }
             }
-            echo "Round ".$this->getCurrentRound()." winner: Player $roundWinner".PHP_EOL.PHP_EOL;
+            echo $printer->printRoundWinner($this->getCurrentRound(), $roundWinner);
 
             // round winner picks up the two played cards and adds them to their score pile
             foreach ($this->getPlayedCards() as $card) {
@@ -204,15 +205,11 @@ class GameController
                     $player->drawCards($this, 1);
                 }
             }
-//            sleep(1);
         }
 
         foreach ($this->players as $player) {
-            echo "Player " . $player->getPlayerNumber() . " score: " . $player->scorePile->count() . PHP_EOL;
+            echo $printer->printScore($player->getPlayerNumber(), $player->scorePile->count());
         }
-
-        echo PHP_EOL;
-
         return $this->decideWinner();
     }
 
