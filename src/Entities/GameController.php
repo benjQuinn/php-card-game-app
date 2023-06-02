@@ -2,6 +2,8 @@
 
 namespace CardGameApp\Entities;
 
+use CardGameApp\Entities\Cards\Jack;
+use CardGameApp\Entities\Cards\Joker;
 use CardGameApp\Entities\Collections\Deck;
 use CardGameApp\Entities\Collections\Pile;
 use CardGameApp\Entities\Pregames\PregameInterface;
@@ -83,11 +85,13 @@ class GameController
         $this->playedCards->add($opponentsPlayedCard);
 
         // if leader has the highest value card they remain the leader
-        if ($leadersPlayedCard->getValue() > $opponentsPlayedCard->getValue()) {
+        if (($leadersPlayedCard->getValue() > $opponentsPlayedCard->getValue()) || ($leadersPlayedCard instanceof Joker && $opponentsPlayedCard instanceof Jack))
+        {
             $this->currentLeader = $leader->getPlayerNumber();
         }
         // if opponent has the highest value card they become the leader
-        if ($leadersPlayedCard->getValue() < $opponentsPlayedCard->getValue()) {
+        if (($leadersPlayedCard->getValue() < $opponentsPlayedCard->getValue()) ||($leadersPlayedCard instanceof Jack && $opponentsPlayedCard instanceof Joker))
+        {
             $this->currentLeader = $opponent->getPlayerNumber();
         }
         // if both cards played have the same value, they are removed from the game and both players play another card
@@ -197,7 +201,6 @@ class GameController
                 // and remove it from the table's played cards pile
                 $this->playedCards->remove($card);
             }
-
             // after the winner picks up the played cards from this round, each player gets a new card from the deck IF the deck is not empty
             if (!empty($this->deck->getCards())) {
                 foreach ($this->players as $player)
