@@ -4,9 +4,13 @@ namespace CardGameApp\Entities;
 
 class Printer
 {
-    public function printPregameWinner(int $playerNumber, string $pregame): string
+    public function printPlayers(string $firstPlayer, string $secondPlayer): string
     {
-        return "Player $playerNumber wins $pregame and starts the game as leader!".PHP_EOL;
+        return "$firstPlayer and $secondPlayer step up to the table...".PHP_EOL;
+    }
+    public function printPregameWinner(string $winner, string $loser, string $pregame): string
+    {
+        return "$winner wins $pregame and starts the game as leader and Player 1.".PHP_EOL."$loser starts the game as Player 2.";
     }
 
     public function printStartGame(): string

@@ -41,7 +41,18 @@ function start($players, $pregames): string
 
         $gameController->setUp();
 
-        echo $printer->printPregameWinner($gameController->currentLeader, $pregame->name);
+        echo $printer->printPlayers($firstPlayer->getName(), $secondPlayer->getName());
+        echo PHP_EOL;
+
+        foreach ([$firstPlayer, $secondPlayer] as $player)
+        {
+            if ($player !== $pregame->winner)
+            {
+                $loser = $player;
+            }
+        }
+
+        echo $printer->printPregameWinner($pregame->winner->getName(), $loser->getName(), $pregame->name);
         echo PHP_EOL.PHP_EOL;
 
         $gameController->deck->shuffle();
