@@ -8,6 +8,13 @@ use CardGameApp\Entities\Collections\Deck;
 use CardGameApp\Entities\Collections\Pile;
 use CardGameApp\Entities\Pregames\PregameInterface;
 
+/** MB
+ * something for you to think about. GameController defines the core controller that runs the game. That makes sense,
+ * but we make some assumptions. Firstly, that the game is 2 player. Second, that it is a card game. Third, it is our
+ * specific card game. How could you restructure the code enforce its sue for the desired purpose and/or leave the door
+ * open for accommodating changes to those assumptions in the future.
+ */
+
 class GameController
 {
     protected PregameInterface $pregame;
@@ -78,6 +85,20 @@ class GameController
      */
     public function play(Player $leader, Player $opponent): int {
         $this->currentRound++;
+        /** MB:
+         * We have some two-way tight coupling here. It is hard to see if this will be bad or not, but normally
+         * we want to avoid tight coupling. The player & GameController classes are tightly coupled ond are acting on each other
+         * Ideally we want 1 actor, so its clear which class/code is in charge.
+         *
+         * I think you've got a few design challenges here:
+         * - The GameController is acting as the main actor/orchestrator because we don't have 2 real humans playing
+         * - we could simulate 2 Player classes to behave like humans, and remove the central GameController, but that would
+         *    be really complicated, so GameController is fine.
+         * - We want to be careful when mixing state and controllers. Your GameController is also acting as the "table"
+         *   which is why the players need access to it, so they can interact with the world.
+         * - We ideally want the Player class only coupled to what it needs, which is
+         *
+         */
         // leaders Card gets added to playedCards array on playCard() call
         $leadersPlayedCard = $leader->playCard($this);
         $opponentsPlayedCard = $opponent->playCard($this);
@@ -168,13 +189,20 @@ class GameController
      * @return string
      */
     public function runGame(): string {
+        /** MB : you probably want to look up dependency inversion and dependency injection. It would be better to have */
         $printer = new Printer();
+
 
         foreach ($this->players as $player)
         {
             $player->drawCards($this, 13);
         }
-
+        /** MB : is there a reason that we check both the round no. AND the size of players hands?
+         * If the game is fixed to 27 rounds, then shouldn't that be the only condition ?
+         * Also, something to consider, while loops are dangerous. We should only use them, if we MUST use them. I think
+         * a for loop would be fine here, because we have a fixed amount of iterations.
+         * while loops always have the risk of running forever, if you have a bug and/or no escape conditions.
+         */
         while ($this->doPlayersHaveCards() && $this->getCurrentRound() <= 27) {
             $leader = $this->players[$this->whoIsLeader()];
             $opponent = $this->players[$this->whoIsNotLeader()];
@@ -182,6 +210,7 @@ class GameController
             $roundWinner = $this->play($leader, $opponent);
 
             // displays the winner of each round
+            /** MB: Why do we need to reset the index? Wouldn't the first played card (index 0) always be the leaders card  */
             $this->playedCards->resetCardsArrayIndex();
             $playedCards = $this->getPlayedCards();
 
@@ -192,9 +221,11 @@ class GameController
                     echo $printer->printPlayedCard($opponent->getPlayerNumber(), $card->getFace(), $card->getSuit());
                 }
             }
+            /** MB : As mentioned elsewhere, we ideally don't want the echo cmd in our 'logic' code, just in our 'render' code. */
             echo $printer->printRoundWinner($this->getCurrentRound(), $roundWinner);
 
             // round winner picks up the two played cards and adds them to their score pile
+            /** MB: we are calling $this->getPlayedCards() here, but just a few lines up, we already have $this->playedCards. Is there a need for this getter?  */
             foreach ($this->getPlayedCards() as $card) {
                 // add played card to winner's score pile
                 $this->players[$roundWinner]->scorePile->add($card);

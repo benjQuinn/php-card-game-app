@@ -83,7 +83,10 @@ class Player {
                 $gameController->playedCards->add($card);
             }
         }
-
+        /* MB: $card is not always set. There is a path through your code where we get here and $card was never set
+            which could throw a PHP warning. Ideally, $card should have a starting value/ default / fallback value.
+            In fact, because your function return type is set to 'Card', then it will likely be a PHP error, not warning.
+         */
         return $card;
     }
 
