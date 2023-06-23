@@ -15,10 +15,9 @@
  * version of the Printer. Maybe you could use dependency injection instead, so you have 1 printer in the code.
  *
  */
-use CardGameApp\Entities\GameController;
 use CardGameApp\Entities\Player;
 use CardGameApp\Entities\Pregames\CoinToss;
-use CardGameApp\Entities\Printer;
+use CardGameApp\Entities\PPCardGameCLIPrinter;
 use CardGameApp\Entities\Pregames\RPS;
 
 const APP_ROOT = __DIR__;
@@ -39,59 +38,10 @@ $players = [
     new Player("Annesley")
 ];
 
-// starts game with two random players and one random game to decide leader
-function start($players, $pregames): string
-{
-    $printer = new Printer();
-    $pregame = $pregames[rand(0, 1)];
+$printer = new PPCardGameCLIPrinter();
 
-    $randIndexOne = rand(0, 6);
-    $randIndexTwo = rand(0, 6);
-    /** MB
-     * I'm curious why you need this step for $randIndexOne and $randIndexTwo. Can we not just use the $player array ?
-     * Are you trying to set $firstPlayer before the pregame has run?
-     */
-    if ($randIndexOne !== $randIndexTwo) {
-        $firstPlayer = $players[$randIndexOne];
-        $secondPlayer = $players[$randIndexTwo];
+$printer->printLineBr();
 
-        $gameController = new GameController([$firstPlayer, $secondPlayer], $pregame);
+startCLI($players, $pregames, $printer);
 
-        $gameController->setUp();
-
-        echo $printer->printPlayers($firstPlayer->getName(), $secondPlayer->getName());
-        /** MB:
-         * ideally all your echo statements should be in the $printer. This way, we could cleanly switch to a different
-         * GUI type.
-         */
-        echo PHP_EOL;
-
-        /** MB
-         * If the pregame stores the winner reference, why not also store the loser ref, so you don't need to externally
-         * calculate it above.
-         * Also, we have a pregame interface, so we should not be using attributes directly from the object. If we only
-         * ever use functions defined on the interface, then we are leaning into loose coupling and also protecting our code from
-         * changes that might be made to the pregame code later. If another dev comes along, they should be able to know they
-         * can safely change the Pregames, as long as they honour the interface.
-         */
-        echo $printer->printPregameWinner($pregame->getPreGameWinner()->getName(), $pregame->getPregameLoser($players)->getName(), $pregame->name);
-
-        echo PHP_EOL.PHP_EOL;
-
-        /** MB : maybe the deck should be shuffled as part of the setup() ? This feels like a gameController thing */
-        $gameController->deck->shuffle();
-
-        echo $printer->printStartGame();
-        echo PHP_EOL;
-
-        return $gameController->runGame();
-    } else {
-        return start($players, $pregames);
-    }
-}
-
-echo PHP_EOL;
-
-echo start($players, $pregames);
-
-echo PHP_EOL;
+$printer->printLineBr();

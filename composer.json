@@ -12,7 +12,10 @@
     "autoload": {
         "psr-4": {
             "CardGameApp\\": "src/"
-        }
+        },
+        "files": [
+            "src/Helpers/helperFunctions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

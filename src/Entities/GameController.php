@@ -161,7 +161,7 @@ class GameController
      */
     private function decideWinner(): string {
         $scores = [];
-        $printer = new Printer();
+        $printer = new PPCardGameCLIPrinter();
 
         // put each players score into an array
         foreach ($this->players as $player) {
@@ -190,7 +190,7 @@ class GameController
      */
     public function runGame(): string {
         /** MB : you probably want to look up dependency inversion and dependency injection. It would be better to have */
-        $printer = new Printer();
+        $printer = new PPCardGameCLIPrinter();
 
 
         foreach ($this->players as $player)
@@ -216,13 +216,13 @@ class GameController
 
             foreach ($playedCards as $index => $card) {
                 if ($index === 0) {
-                    echo $printer->printPlayedCard($leader->getPlayerNumber(), $card->getFace(), $card->getSuit());
+                    $printer->printPlayedCard($leader->getPlayerNumber(), $card->getFace(), $card->getSuit());
                 } else {
-                    echo $printer->printPlayedCard($opponent->getPlayerNumber(), $card->getFace(), $card->getSuit());
+                    $printer->printPlayedCard($opponent->getPlayerNumber(), $card->getFace(), $card->getSuit());
                 }
             }
             /** MB : As mentioned elsewhere, we ideally don't want the echo cmd in our 'logic' code, just in our 'render' code. */
-            echo $printer->printRoundWinner($this->getCurrentRound(), $roundWinner);
+            $printer->printRoundWinner($this->getCurrentRound(), $roundWinner);
 
             // round winner picks up the two played cards and adds them to their score pile
             /** MB: we are calling $this->getPlayedCards() here, but just a few lines up, we already have $this->playedCards. Is there a need for this getter?  */
@@ -242,7 +242,7 @@ class GameController
         }
 
         foreach ($this->players as $player) {
-            echo $printer->printScore($player->getPlayerNumber(), $player->scorePile->count());
+            $printer->printScore($player->getPlayerNumber(), $player->scorePile->count());
         }
         return $this->decideWinner();
     }

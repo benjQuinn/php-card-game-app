@@ -4,10 +4,9 @@ namespace CardGameApp\Entities\Pregames;
 
 use CardGameApp\Entities\Player;
 
-class CoinToss implements PregameInterface
+class CoinToss extends Pregame
 {
     public string $name = "Heads or Tails?";
-    public Player $winner;
     private array $coin = ["heads", "tails"];
 
     private function play(Player $firstPlayer, Player $secondPlayer) {
@@ -34,21 +33,9 @@ class CoinToss implements PregameInterface
         }
     }
 
-    public function decideLeader(Player $playerOne, Player $playerTwo): int
+    public function decideWinner(Player $playerOne, Player $playerTwo): int
     {
         $this->play($playerOne, $playerTwo);
         return $this->winner->getPlayerNumber();
-    }
-
-    public function getPregameLoser($players): Player
-    {
-        foreach ($players as $player)
-        {
-            if ($player !== $this->winner)
-            {
-                $loser = $player;
-            }
-        }
-        return $loser;
     }
 }
