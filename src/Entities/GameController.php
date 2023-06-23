@@ -32,7 +32,7 @@ class GameController
     }
 
     public function setUp(): int {
-        $winner = $this->pregame->decideLeader(...$this->players);
+        $winner = $this->pregame->decideWinner(...$this->players);
 
         $this->players = [
             $this->players[0]->getPlayerNumber() => $this->players[0],

@@ -66,13 +66,6 @@ function start($players, $pregames): string
          */
         echo PHP_EOL;
 
-        foreach ([$firstPlayer, $secondPlayer] as $player)
-        {
-            if ($player !== $pregame->winner)
-            {
-                $loser = $player;
-            }
-        }
         /** MB
          * If the pregame stores the winner reference, why not also store the loser ref, so you don't need to externally
          * calculate it above.
@@ -81,7 +74,8 @@ function start($players, $pregames): string
          * changes that might be made to the pregame code later. If another dev comes along, they should be able to know they
          * can safely change the Pregames, as long as they honour the interface.
          */
-        echo $printer->printPregameWinner($pregame->winner->getName(), $loser->getName(), $pregame->name);
+        echo $printer->printPregameWinner($pregame->getPreGameWinner()->getName(), $pregame->getPregameLoser($players)->getName(), $pregame->name);
+
         echo PHP_EOL.PHP_EOL;
 
         /** MB : maybe the deck should be shuffled as part of the setup() ? This feels like a gameController thing */

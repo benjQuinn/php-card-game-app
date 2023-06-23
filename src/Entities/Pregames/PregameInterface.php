@@ -22,5 +22,9 @@ use CardGameApp\Entities\Player;
  */
 interface PregameInterface
 {
-    public function decideLeader(Player $playerOne, Player $playerTwo): int;
+    public function decideWinner(Player $playerOne, Player $playerTwo): int;
+
+    public function getPregameWinner(): Player;
+
+    public function getPregameLoser(array $players): Player;
 }

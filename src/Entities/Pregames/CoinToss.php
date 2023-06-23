@@ -39,4 +39,16 @@ class CoinToss implements PregameInterface
         $this->play($playerOne, $playerTwo);
         return $this->winner->getPlayerNumber();
     }
+
+    public function getPregameLoser($players): Player
+    {
+        foreach ($players as $player)
+        {
+            if ($player !== $this->winner)
+            {
+                $loser = $player;
+            }
+        }
+        return $loser;
+    }
 }

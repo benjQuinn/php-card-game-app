@@ -4,10 +4,9 @@ namespace CardGameApp\Entities\Pregames;
 
 use CardGameApp\Entities\Player;
 
-class RPS implements PregameInterface
+class RPS extends Pregame
 {
     public string $name = "Rock-paper-scissors";
-    public Player $winner;
     private array $winningConditions = [
         "rock" => "scissors",
         "paper" => "rock",
@@ -35,7 +34,7 @@ class RPS implements PregameInterface
         }
     }
 
-    public function decideLeader(Player $playerOne, Player $playerTwo): int
+    public function decideWinner(Player $playerOne, Player $playerTwo): int
     {
         $this->play($playerOne, $playerTwo);
         return $this->winner->getPlayerNumber();
