@@ -1,19 +1,22 @@
 <?php
 
-namespace CardGameApp\Entities;
+namespace CardGameApp\Entities\Players;
 
 use CardGameApp\Entities\Cards\Card;
 use CardGameApp\Entities\Collections\Hand;
 use CardGameApp\Entities\Collections\Pile;
+use CardGameApp\Entities\GameController;
 
-class Player {
+class PPCardGamePlayer implements PlayerInterface
+{
     private int $playerNumber = 0;
     private string $name;
     public Hand $hand;
     public Pile $scorePile;
     private bool $isLeader = false;
 
-    public function __construct(string $name) {
+    public function __construct(string $name)
+    {
         $this->name = $name;
         $this->hand = new Hand();
         $this->scorePile = new Pile();
@@ -24,7 +27,8 @@ class Player {
      * @param GameController $gameController
      * @return void
      */
-    private function updateLeader(GameController $gameController) {
+    private function updateLeader(GameController $gameController): void
+    {
         // changes isLeader to true if whoIsLeader() returns the instances player number and vice versa
         $this->isLeader = $gameController->whoIsLeader() === $this->playerNumber;
     }
@@ -33,27 +37,31 @@ class Player {
      * Generates rock, paper or scissors string randomly every time it is called
      * @return string
      */
-    public function generateRockPaperScissors(): string {
+    public function generateRockPaperScissors(): string
+    {
         $rps = ["rock", "paper", "scissors"];
         $randomIndex = rand(0, 2);
 
         return $rps[$randomIndex];
     }
 
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->name;
     }
 
-    public function getPlayerNumber(): int {
+    public function getPlayerNumber(): int
+    {
         return $this->playerNumber;
     }
 
     /**
      * Plays a card. This function is played whether the player is the leader or not
      * @param GameController $gameController
-     * @return Card
+     * @return Card|false
      */
-    public function playCard(GameController $gameController): Card|false {
+    public function playCard(GameController $gameController): Card|false
+    {
 
         $card = false;
 
@@ -61,7 +69,8 @@ class Player {
         // sort cards in ascending order
         $this->hand->sort();
 
-        if (!$this->isLeader) {
+        if (!$this->isLeader)
+        {
             // get the card the leader has just played
             $playedCards = $gameController->playedCards->getCards();
             $leadersPlayedCard = reset($playedCards);
@@ -69,7 +78,8 @@ class Player {
             // filters hand to only show cards that match suit of the played card
             $filteredHand = $this->hand->filter($leadersPlayedCard->getSuit());
 
-            if (empty($filteredHand)) {
+            if (empty($filteredHand))
+            {
                 // if player has no card matching suit, they strategically play their lowest value card from their hand
                 $card = $this->hand->returnFirstCard();
             } else {
@@ -93,7 +103,7 @@ class Player {
      * @param int $cards
      * @return void
      */
-    public function drawCards(GameController $gameController, int $cards)
+    public function drawCards(GameController $gameController, int $cards): void
     {
         for ($i = 0; $i < $cards; $i++)
         {
@@ -101,7 +111,7 @@ class Player {
         }
     }
 
-    public function changePlayerNumber(int $number)
+    public function changePlayerNumber(int $number): void
     {
         $this->playerNumber = $number;
     }
@@ -110,7 +120,8 @@ class Player {
      * Initialises the players properties - used when restarting the game
      * @return void
      */
-    public function initialisePlayer() {
+    public function initialisePlayer()
+    {
         $this->hand = new Hand();
         $this->scorePile = new Pile();
         $this->isLeader = false;

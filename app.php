@@ -15,10 +15,11 @@
  * version of the Printer. Maybe you could use dependency injection instead, so you have 1 printer in the code.
  *
  */
-use CardGameApp\Entities\Player;
+
+use CardGameApp\Entities\Players\PPCardGamePlayer;
 use CardGameApp\Entities\Pregames\CoinToss;
-use CardGameApp\Entities\PPCardGameCLIPrinter;
 use CardGameApp\Entities\Pregames\RPS;
+use CardGameApp\Entities\Printers\PPCardGameCLIPrinter;
 
 const APP_ROOT = __DIR__;
 require_once APP_ROOT . '/vendor/autoload.php';
@@ -29,13 +30,13 @@ $pregames = [
 ];
 
 $players = [
-    new Player("Ben"),
-    new Player("Mani"),
-    new Player("Aidan"),
-    new Player("Mike"),
-    new Player("Omar"),
-    new Player("Anestis"),
-    new Player("Annesley")
+    new PPCardGamePlayer("Ben"),
+    new PPCardGamePlayer("Mani"),
+    new PPCardGamePlayer("Aidan"),
+    new PPCardGamePlayer("Mike"),
+    new PPCardGamePlayer("Omar"),
+    new PPCardGamePlayer("Anestis"),
+    new PPCardGamePlayer("Annesley")
 ];
 
 $printer = new PPCardGameCLIPrinter();

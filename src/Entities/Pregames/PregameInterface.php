@@ -2,7 +2,7 @@
 
 namespace CardGameApp\Entities\Pregames;
 
-use CardGameApp\Entities\Player;
+use CardGameApp\Entities\Players\PPCardGamePlayer;
 
 
 /** MB
@@ -22,9 +22,9 @@ use CardGameApp\Entities\Player;
  */
 interface PregameInterface
 {
-    public function decideWinner(Player $playerOne, Player $playerTwo): int;
+    public function decideWinner(PPCardGamePlayer $playerOne, PPCardGamePlayer $playerTwo): int;
 
-    public function getPregameWinner(): Player;
+    public function getPregameWinner(): PPCardGamePlayer;
 
-    public function getPregameLoser(array $players): Player;
+    public function getPregameLoser(array $players): PPCardGamePlayer;
 }

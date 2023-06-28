@@ -2,18 +2,18 @@
 
 namespace CardGameApp\Entities\Pregames;
 
-use CardGameApp\Entities\Player;
+use CardGameApp\Entities\Players\PPCardGamePlayer;
 
 abstract class Pregame implements PregameInterface
 {
-    public Player $winner;
+    public PPCardGamePlayer $winner;
 
-    public function getPregameWinner(): Player
+    public function getPregameWinner(): PPCardGamePlayer
     {
         return $this->winner;
     }
 
-    public function getPregameLoser(array $players): Player
+    public function getPregameLoser(array $players): PPCardGamePlayer
     {
         foreach ($players as $player)
         {

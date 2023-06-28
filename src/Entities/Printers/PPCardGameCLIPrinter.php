@@ -1,8 +1,8 @@
 <?php
 
-namespace CardGameApp\Entities;
+namespace CardGameApp\Entities\Printers;
 
-class PPCardGameCLIPrinter
+class PPCardGameCLIPrinter implements PrinterInterface
 {
     public function printPlayers(string $firstPlayer, string $secondPlayer)
     {

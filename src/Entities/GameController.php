@@ -6,7 +6,9 @@ use CardGameApp\Entities\Cards\Jack;
 use CardGameApp\Entities\Cards\Joker;
 use CardGameApp\Entities\Collections\Deck;
 use CardGameApp\Entities\Collections\Pile;
+use CardGameApp\Entities\Players\PPCardGamePlayer;
 use CardGameApp\Entities\Pregames\PregameInterface;
+use CardGameApp\Entities\Printers\PrinterInterface;
 
 /** MB
  * something for you to think about. GameController defines the core controller that runs the game. That makes sense,
@@ -18,20 +20,25 @@ use CardGameApp\Entities\Pregames\PregameInterface;
 class GameController
 {
     protected PregameInterface $pregame;
+    protected PrinterInterface $printer;
     public array $players;
     public Deck $deck;
     public Pile $playedCards;
     public int $currentLeader = 0;
     private int $currentRound = 0;
 
-    public function __construct(array $players, PregameInterface $pregame) {
+    public function __construct(array $players, PregameInterface $pregame, PrinterInterface $printer) {
         $this->pregame = $pregame;
+        $this->printer = $printer;
         $this->players = $players;
         $this->deck = new Deck();
         $this->playedCards = new Pile();
     }
 
-    public function setUp(): int {
+    public function setUp(): int
+    {
+        $this->deck->shuffle();
+
         $winner = $this->pregame->decideWinner(...$this->players);
 
         $this->players = [
@@ -44,7 +51,8 @@ class GameController
         return $this->currentLeader;
     }
 
-    public function draw() {
+    public function draw()
+    {
         // Returns the top card of the deck
         $cards = $this->deck->getCards();
         $card = array_pop($cards);
@@ -61,7 +69,8 @@ class GameController
      * Returns the player number of the current leader when called
      * @return int
      */
-    public function whoIsLeader(): int {
+    public function whoIsLeader(): int
+    {
         return $this->currentLeader;
     }
 
@@ -69,9 +78,12 @@ class GameController
      * Returns the player number of the player that is not the leader when called
      * @return int|void
      */
-    public function whoIsNotLeader() {
-        foreach ($this->players as $playerNumber => $player) {
-            if ($playerNumber !== $this->currentLeader) {
+    public function whoIsNotLeader()
+    {
+        foreach ($this->players as $playerNumber => $player)
+        {
+            if ($playerNumber !== $this->currentLeader)
+            {
                 return $playerNumber;
             }
         }
@@ -79,11 +91,12 @@ class GameController
 
     /**
      * Decides who is the winner when both players play their card
-     * @param Player $leader the player that is the current leader when called
-     * @param Player $opponent the player that is not the current leader when called
+     * @param PPCardGamePlayer $leader the player that is the current leader when called
+     * @param PPCardGamePlayer $opponent the player that is not the current leader when called
      * @return int the player number of the round winner
      */
-    public function play(Player $leader, Player $opponent): int {
+    public function play(PPCardGamePlayer $leader, PPCardGamePlayer $opponent): int
+    {
         $this->currentRound++;
         /** MB:
          * We have some two-way tight coupling here. It is hard to see if this will be bad or not, but normally
@@ -92,11 +105,11 @@ class GameController
          *
          * I think you've got a few design challenges here:
          * - The GameController is acting as the main actor/orchestrator because we don't have 2 real humans playing
-         * - we could simulate 2 Player classes to behave like humans, and remove the central GameController, but that would
+         * - we could simulate 2 PPCardGamePlayer classes to behave like humans, and remove the central GameController, but that would
          *    be really complicated, so GameController is fine.
          * - We want to be careful when mixing state and controllers. Your GameController is also acting as the "table"
          *   which is why the players need access to it, so they can interact with the world.
-         * - We ideally want the Player class only coupled to what it needs, which is
+         * - We ideally want the PPCardGamePlayer class only coupled to what it needs, which is
          *
          */
         // leaders Card gets added to playedCards array on playCard() call
@@ -138,7 +151,8 @@ class GameController
      * Returns the current round when called
      * @return int
      */
-    public function getCurrentRound(): int {
+    public function getCurrentRound(): int
+    {
         return $this->currentRound;
     }
 
@@ -146,9 +160,12 @@ class GameController
      * returns true if either player has an empty deck
      * @return bool
      */
-    public function doPlayersHaveCards(): bool {
-        foreach ($this->players as $player) {
-            if ($player->hand->count() === 0) {
+    public function doPlayersHaveCards(): bool
+    {
+        foreach ($this->players as $player)
+        {
+            if ($player->hand->count() === 0)
+            {
                 return false;
             }
         }
@@ -159,25 +176,29 @@ class GameController
      * Works out the winner based on each player's score pile
      * @return string
      */
-    private function decideWinner(): string {
+    private function decideWinner(): string
+    {
         $scores = [];
-        $printer = new PPCardGameCLIPrinter();
 
         // put each players score into an array
-        foreach ($this->players as $player) {
+        foreach ($this->players as $player)
+        {
             $scores[] = $player->scorePile->count();
         }
         // find the highest score in scores array
         $winningScore = max($scores);
         $resultStr = "";
 
-        if ($scores[0] === $scores[1]) {
-            $resultStr .= $printer->printDraw();
+        if ($scores[0] === $scores[1])
+        {
+            $resultStr .= $this->printer->printDraw();
         } else {
             // find which player had the winning score
-            foreach ($this->players as $player) {
-                if ($winningScore === $player->scorePile->count()) {
-                    $resultStr .= $printer->printGameWinner($player->getPlayerNumber(), $player->getName());
+            foreach ($this->players as $player)
+            {
+                if ($winningScore === $player->scorePile->count())
+                {
+                    $resultStr .= $this->printer->printGameWinner($player->getPlayerNumber(), $player->getName());
                 }
             }
         }
@@ -188,11 +209,8 @@ class GameController
      * Automates a game. The function sets up the table and plays through each round of the game, displaying the winner of each, before displaying the winner based on each player's score pile after the final round
      * @return string
      */
-    public function runGame(): string {
-        /** MB : you probably want to look up dependency inversion and dependency injection. It would be better to have */
-        $printer = new PPCardGameCLIPrinter();
-
-
+    public function runGame(): string
+    {
         foreach ($this->players as $player)
         {
             $player->drawCards($this, 13);
@@ -203,7 +221,8 @@ class GameController
          * a for loop would be fine here, because we have a fixed amount of iterations.
          * while loops always have the risk of running forever, if you have a bug and/or no escape conditions.
          */
-        while ($this->doPlayersHaveCards() && $this->getCurrentRound() <= 27) {
+        while ($this->doPlayersHaveCards() && $this->getCurrentRound() <= 27)
+        {
             $leader = $this->players[$this->whoIsLeader()];
             $opponent = $this->players[$this->whoIsNotLeader()];
 
@@ -212,26 +231,29 @@ class GameController
             // displays the winner of each round
             $playedCards = $this->getPlayedCards();
 
-            foreach ($playedCards as $index => $card) {
-                if ($index === 0) {
-                    $printer->printPlayedCard($leader->getPlayerNumber(), $card->getFace(), $card->getSuit());
+            foreach ($playedCards as $index => $card)
+            {
+                if ($index === 0)
+                {
+                    $this->printer->printPlayedCard($leader->getPlayerNumber(), $card->getFace(), $card->getSuit());
                 } else {
-                    $printer->printPlayedCard($opponent->getPlayerNumber(), $card->getFace(), $card->getSuit());
+                    $this->printer->printPlayedCard($opponent->getPlayerNumber(), $card->getFace(), $card->getSuit());
                 }
             }
-            /** MB : As mentioned elsewhere, we ideally don't want the echo cmd in our 'logic' code, just in our 'render' code. */
-            $printer->printRoundWinner($this->getCurrentRound(), $roundWinner);
+
+            $this->printer->printRoundWinner($this->getCurrentRound(), $roundWinner);
 
             // round winner picks up the two played cards and adds them to their score pile
-            /** MB: we are calling $this->getPlayedCards() here, but just a few lines up, we already have $this->playedCards. Is there a need for this getter?  */
-            foreach ($this->getPlayedCards() as $card) {
+            foreach ($playedCards as $card)
+            {
                 // add played card to winner's score pile
                 $this->players[$roundWinner]->scorePile->add($card);
                 // and remove it from the table's played cards pile
                 $this->playedCards->remove($card);
             }
             // after the winner picks up the played cards from this round, each player gets a new card from the deck IF the deck is not empty
-            if (!empty($this->deck->getCards())) {
+            if (!empty($this->deck->getCards()))
+            {
                 foreach ($this->players as $player)
                 {
                     $player->drawCards($this, 1);
@@ -239,8 +261,9 @@ class GameController
             }
         }
 
-        foreach ($this->players as $player) {
-            $printer->printScore($player->getPlayerNumber(), $player->scorePile->count());
+        foreach ($this->players as $player)
+        {
+            $this->printer->printScore($player->getPlayerNumber(), $player->scorePile->count());
         }
         return $this->decideWinner();
     }
@@ -249,7 +272,8 @@ class GameController
      * Initialises the tables properties - used when restarting the game
      * @return void
      */
-    public function initialiseGame() {
+    public function initialiseGame()
+    {
         $this->deck = new Deck();
         $this->playedCards = new Pile();
         $this->currentLeader = 0;
@@ -259,11 +283,13 @@ class GameController
     /** Initialises the player and table properties so the game can be restarted
      * @return void
      */
-    public function restartGame() {
+    public function restartGame()
+    {
         // initialise table properties
         $this->initialiseGame();
         // initialise both player properties
-        foreach ($this->players as $player) {
+        foreach ($this->players as $player)
+        {
             $player->initialisePlayer();
         }
     }
