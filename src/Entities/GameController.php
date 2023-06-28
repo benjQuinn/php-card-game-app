@@ -210,8 +210,6 @@ class GameController
             $roundWinner = $this->play($leader, $opponent);
 
             // displays the winner of each round
-            /** MB: Why do we need to reset the index? Wouldn't the first played card (index 0) always be the leaders card  */
-            $this->playedCards->resetCardsArrayIndex();
             $playedCards = $this->getPlayedCards();
 
             foreach ($playedCards as $index => $card) {

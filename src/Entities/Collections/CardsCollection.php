@@ -56,11 +56,6 @@ abstract class CardsCollection
         return $this->cards;
     }
 
-    public function resetCardsArrayIndex()
-    {
-        $this->cards = array_values($this->cards);
-    }
-
     public function isEmpty(): bool
     {
         return empty($this->cards);
