@@ -53,7 +53,9 @@ class Player {
      * @param GameController $gameController
      * @return Card
      */
-    public function playCard(GameController $gameController): Card {
+    public function playCard(GameController $gameController): Card|false {
+
+        $card = false;
 
         $this->updateLeader($gameController);
         // sort cards in ascending order
@@ -83,10 +85,6 @@ class Player {
                 $gameController->playedCards->add($card);
             }
         }
-        /* MB: $card is not always set. There is a path through your code where we get here and $card was never set
-            which could throw a PHP warning. Ideally, $card should have a starting value/ default / fallback value.
-            In fact, because your function return type is set to 'Card', then it will likely be a PHP error, not warning.
-         */
         return $card;
     }
 
