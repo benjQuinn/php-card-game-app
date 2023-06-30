@@ -1,8 +1,8 @@
 <?php
 
-use App\Entities\GameController;
+use App\Entities\Games\PPCardGame;
 
-function startCLI($players, $pregames, $printer): string
+function startCLI($players, $pregames, $printer): void
 {
     $pregame = $pregames[rand(0, 1)];
 
@@ -14,7 +14,7 @@ function startCLI($players, $pregames, $printer): string
         $firstPlayer = $players[$randIndexOne];
         $secondPlayer = $players[$randIndexTwo];
 
-        $gameController = new GameController([$firstPlayer, $secondPlayer], $pregame, $printer);
+        $gameController = new PPCardGame([$firstPlayer, $secondPlayer], $pregame, $printer);
 
         $gameController->setUp();
 
@@ -22,7 +22,7 @@ function startCLI($players, $pregames, $printer): string
 
         $printer->printLineBr();
 
-        $printer->printPregameWinner($pregame->getPreGameWinner()->getName(), $pregame->getPregameLoser($gameController->players)->getName(), $pregame->name);
+        $printer->printPregameWinner($pregame->getWinner()->getName(), $pregame->getLoser($gameController->players)->getName(), $pregame->name);
 
         $printer->printLineBr();
         $printer->printLineBr();
@@ -31,8 +31,8 @@ function startCLI($players, $pregames, $printer): string
 
         $printer->printLineBr();
 
-        return $gameController->runGame();
+        $gameController->runGame();
     } else {
-        return startCLI($players, $pregames, $printer);
+        startCLI($players, $pregames, $printer);
     }
 }

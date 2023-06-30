@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entities\Pregames;
+namespace App\Entities\Games;
 
-use App\Entities\Players\PPCardGamePlayer;
+use App\Entities\Players\Player;
 
-class RPS extends Pregame
+class RPS extends TwoPlayerGame
 {
     public string $name = "Rock-paper-scissors";
     private array $winningConditions = [
@@ -13,7 +13,7 @@ class RPS extends Pregame
         "scissors" => "paper"
     ];
 
-    private function play(PPCardGamePlayer $firstPlayer, PPCardGamePlayer $secondPlayer) {
+    private function play(Player $firstPlayer, Player $secondPlayer) {
 
         $firstPlayerRPS = $firstPlayer->generateRockPaperScissors();
         $secondPlayerRPS = $secondPlayer->generateRockPaperScissors();
@@ -34,9 +34,9 @@ class RPS extends Pregame
         }
     }
 
-    public function decideWinner(PPCardGamePlayer $playerOne, PPCardGamePlayer $playerTwo): int
+    public function decideWinner(Player $playerOne, Player $playerTwo): Player
     {
         $this->play($playerOne, $playerTwo);
-        return $this->winner->getPlayerNumber();
+        return $this->winner;
     }
 }

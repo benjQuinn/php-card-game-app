@@ -5,9 +5,9 @@ namespace App\Entities\Players;
 use App\Entities\Cards\Card;
 use App\Entities\Collections\Hand;
 use App\Entities\Collections\Pile;
-use App\Entities\GameController;
+use App\Entities\Games\PPCardGame;
 
-class PPCardGamePlayer implements PlayerInterface
+class PPCardGamePlayer implements Player
 {
     private int $playerNumber = 0;
     private string $name;
@@ -24,10 +24,10 @@ class PPCardGamePlayer implements PlayerInterface
 
     /**
      * changes isLeader to true if whoIsLeader() on Table object returns the instances player number and vice versa
-     * @param GameController $gameController
+     * @param PPCardGame $gameController
      * @return void
      */
-    private function updateLeader(GameController $gameController): void
+    private function updateLeader(PPCardGame $gameController): void
     {
         // changes isLeader to true if whoIsLeader() returns the instances player number and vice versa
         $this->isLeader = $gameController->whoIsLeader() === $this->playerNumber;
@@ -57,10 +57,10 @@ class PPCardGamePlayer implements PlayerInterface
 
     /**
      * Plays a card. This function is played whether the player is the leader or not
-     * @param GameController $gameController
+     * @param PPCardGame $gameController
      * @return Card|false
      */
-    public function playCard(GameController $gameController): Card|false
+    public function playCard(PPCardGame $gameController): Card|false
     {
 
         $card = false;
@@ -99,11 +99,11 @@ class PPCardGamePlayer implements PlayerInterface
     }
 
     /**
-     * @param GameController $gameController
+     * @param PPCardGame $gameController
      * @param int $cards
      * @return void
      */
-    public function drawCards(GameController $gameController, int $cards): void
+    public function drawCards(PPCardGame $gameController, int $cards): void
     {
         for ($i = 0; $i < $cards; $i++)
         {

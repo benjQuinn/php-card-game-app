@@ -2,7 +2,7 @@
 
 namespace App\Entities\Players;
 
-interface PlayerInterface
+interface Player
 {
     public function getName();
 

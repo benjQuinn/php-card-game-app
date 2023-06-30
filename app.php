@@ -11,14 +11,14 @@
  * Maybe the interface could just be TwoPlayerGame ?
  *
  * You have started on the path of separating your presentation and mode layer, which would be the MVC design pattern,
- * however you still have some bits of display code spread across the code. Your GameController is creating its own
+ * however you still have some bits of display code spread across the code. Your PPCardGame is creating its own
  * version of the Printer. Maybe you could use dependency injection instead, so you have 1 printer in the code.
  *
  */
 
 use App\Entities\Players\PPCardGamePlayer;
-use App\Entities\Pregames\CoinToss;
-use App\Entities\Pregames\RPS;
+use App\Entities\Games\CoinToss;
+use App\Entities\Games\RPS;
 use App\Entities\Printers\PPCardGameCLIPrinter;
 
 const APP_ROOT = __DIR__;

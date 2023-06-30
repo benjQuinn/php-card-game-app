@@ -2,7 +2,7 @@
 
 namespace App\Entities\Printers;
 
-class PPCardGameCLIPrinter implements PrinterInterface
+class PPCardGameCLIPrinter implements Printer
 {
     public function printPlayers(string $firstPlayer, string $secondPlayer)
     {

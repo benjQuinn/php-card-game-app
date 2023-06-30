@@ -1,33 +1,33 @@
 <?php
 
-namespace App\Entities;
+namespace App\Entities\Games;
 
 use App\Entities\Cards\Jack;
 use App\Entities\Cards\Joker;
 use App\Entities\Collections\Deck;
 use App\Entities\Collections\Pile;
 use App\Entities\Players\PPCardGamePlayer;
-use App\Entities\Pregames\PregameInterface;
-use App\Entities\Printers\PrinterInterface;
+use App\Entities\Players\Player;
+use App\Entities\Printers\Printer;
 
 /** MB
- * something for you to think about. GameController defines the core controller that runs the game. That makes sense,
+ * something for you to think about. PPCardGame defines the core controller that runs the game. That makes sense,
  * but we make some assumptions. Firstly, that the game is 2 player. Second, that it is a card game. Third, it is our
  * specific card game. How could you restructure the code enforce its sue for the desired purpose and/or leave the door
  * open for accommodating changes to those assumptions in the future.
  */
 
-class GameController
+class PPCardGame extends TwoPlayerGame
 {
-    protected PregameInterface $pregame;
-    protected PrinterInterface $printer;
+    protected Game $pregame;
+    protected Printer $printer;
     public array $players;
     public Deck $deck;
     public Pile $playedCards;
     public int $currentLeader = 0;
     private int $currentRound = 0;
 
-    public function __construct(array $players, PregameInterface $pregame, PrinterInterface $printer) {
+    public function __construct(array $players, Game $pregame, Printer $printer) {
         $this->pregame = $pregame;
         $this->printer = $printer;
         $this->players = $players;
@@ -46,7 +46,7 @@ class GameController
             $this->players[1]->getPlayerNumber() => $this->players[1]
         ];
 
-        $this->currentLeader = $winner;
+        $this->currentLeader = $winner->getPlayerNumber();
 
         return $this->currentLeader;
     }
@@ -100,14 +100,14 @@ class GameController
         $this->currentRound++;
         /** MB:
          * We have some two-way tight coupling here. It is hard to see if this will be bad or not, but normally
-         * we want to avoid tight coupling. The player & GameController classes are tightly coupled ond are acting on each other
+         * we want to avoid tight coupling. The player & PPCardGame classes are tightly coupled ond are acting on each other
          * Ideally we want 1 actor, so its clear which class/code is in charge.
          *
          * I think you've got a few design challenges here:
-         * - The GameController is acting as the main actor/orchestrator because we don't have 2 real humans playing
-         * - we could simulate 2 PPCardGamePlayer classes to behave like humans, and remove the central GameController, but that would
-         *    be really complicated, so GameController is fine.
-         * - We want to be careful when mixing state and controllers. Your GameController is also acting as the "table"
+         * - The PPCardGame is acting as the main actor/orchestrator because we don't have 2 real humans playing
+         * - we could simulate 2 PPCardGamePlayer classes to behave like humans, and remove the central PPCardGame, but that would
+         *    be really complicated, so PPCardGame is fine.
+         * - We want to be careful when mixing state and controllers. Your PPCardGame is also acting as the "table"
          *   which is why the players need access to it, so they can interact with the world.
          * - We ideally want the PPCardGamePlayer class only coupled to what it needs, which is
          *
@@ -174,42 +174,70 @@ class GameController
 
     /**
      * Works out the winner based on each player's score pile
-     * @return string
+     * @param Player $playerOne
+     * @param Player $playerTwo
+     * @return int
      */
-    private function decideWinner(): string
+//    public function decideWinner(): string
+//    {
+//        $scores = [];
+//
+//        // put each players score into an array
+//        foreach ($this->players as $player)
+//        {
+//            $scores[] = $player->scorePile->count();
+//        }
+//        // find the highest score in scores array
+//        $winningScore = max($scores);
+//        $resultStr = "";
+//
+//        if ($scores[0] === $scores[1])
+//        {
+//            $resultStr .= $this->printer->printDraw();
+//        } else {
+//            // find which player had the winning score
+//            foreach ($this->players as $player)
+//            {
+//                if ($winningScore === $player->scorePile->count())
+//                {
+//                    $resultStr .= $this->printer->printGameWinner($player->getPlayerNumber(), $player->getName());
+//                }
+//            }
+//        }
+//        return $resultStr;
+//    }
+
+    public function decideWinner(Player $playerOne, Player $playerTwo): Player|false
     {
         $scores = [];
 
-        // put each players score into an array
         foreach ($this->players as $player)
         {
             $scores[] = $player->scorePile->count();
         }
-        // find the highest score in scores array
+
         $winningScore = max($scores);
-        $resultStr = "";
 
         if ($scores[0] === $scores[1])
         {
-            $resultStr .= $this->printer->printDraw();
+            $this->winner = false;
         } else {
-            // find which player had the winning score
             foreach ($this->players as $player)
             {
                 if ($winningScore === $player->scorePile->count())
                 {
-                    $resultStr .= $this->printer->printGameWinner($player->getPlayerNumber(), $player->getName());
+                    $this->winner = $player;
                 }
             }
         }
-        return $resultStr;
+        return $this->winner;
     }
 
     /**
      * Automates a game. The function sets up the table and plays through each round of the game, displaying the winner of each, before displaying the winner based on each player's score pile after the final round
-     * @return string
+     * @return void
      */
-    public function runGame(): string
+    public function runGame(): void
     {
         foreach ($this->players as $player)
         {
@@ -265,7 +293,15 @@ class GameController
         {
             $this->printer->printScore($player->getPlayerNumber(), $player->scorePile->count());
         }
-        return $this->decideWinner();
+
+        $this->decideWinner(...$this->players);
+
+        if ($this->winner)
+        {
+            $this->printer->printGameWinner($this->winner->getPlayerNumber(), $this->winner->getName());
+        } else {
+            $this->printer->printDraw();
+        }
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace App\Entities\Printers;
 
-interface PrinterInterface
+interface Printer
 {
     public function printGameWinner(int $playerNumber, $playerName);
 

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Entities\Pregames;
+namespace App\Entities\Games;
 
-use App\Entities\Players\PPCardGamePlayer;
+use App\Entities\Players\Player;
 
-class CoinToss extends Pregame
+class CoinToss extends TwoPlayerGame
 {
     public string $name = "Heads or Tails?";
     private array $coin = ["heads", "tails"];
 
-    private function play(PPCardGamePlayer $firstPlayer, PPCardGamePlayer $secondPlayer) {
+    private function play(Player $firstPlayer, Player $secondPlayer) {
         $firstPlayerChoice = $this->coin[rand(0, 1)];
         $secondPlayerChoice = $this->coin[rand(0, 1)];
 
@@ -33,9 +33,9 @@ class CoinToss extends Pregame
         }
     }
 
-    public function decideWinner(PPCardGamePlayer $playerOne, PPCardGamePlayer $playerTwo): int
+    public function decideWinner(Player $playerOne, Player $playerTwo): Player
     {
         $this->play($playerOne, $playerTwo);
-        return $this->winner->getPlayerNumber();
+        return $this->winner;
     }
 }

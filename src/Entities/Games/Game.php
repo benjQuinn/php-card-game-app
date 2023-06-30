@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Entities\Pregames;
+namespace App\Entities\Games;
 
+use App\Entities\Players\Player;
 use App\Entities\Players\PPCardGamePlayer;
 
 
@@ -20,11 +21,11 @@ use App\Entities\Players\PPCardGamePlayer;
  *
  *
  */
-interface PregameInterface
+interface Game
 {
-    public function decideWinner(PPCardGamePlayer $playerOne, PPCardGamePlayer $playerTwo): int;
+    public function decideWinner(Player $playerOne, Player $playerTwo): Player|false;
 
-    public function getPregameWinner(): PPCardGamePlayer;
+    public function getWinner(): Player;
 
-    public function getPregameLoser(array $players): PPCardGamePlayer;
+    public function getLoser(array $players): Player;
 }
