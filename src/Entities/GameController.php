@@ -1,14 +1,14 @@
 <?php
 
-namespace CardGameApp\Entities;
+namespace App\Entities;
 
-use CardGameApp\Entities\Cards\Jack;
-use CardGameApp\Entities\Cards\Joker;
-use CardGameApp\Entities\Collections\Deck;
-use CardGameApp\Entities\Collections\Pile;
-use CardGameApp\Entities\Players\PPCardGamePlayer;
-use CardGameApp\Entities\Pregames\PregameInterface;
-use CardGameApp\Entities\Printers\PrinterInterface;
+use App\Entities\Cards\Jack;
+use App\Entities\Cards\Joker;
+use App\Entities\Collections\Deck;
+use App\Entities\Collections\Pile;
+use App\Entities\Players\PPCardGamePlayer;
+use App\Entities\Pregames\PregameInterface;
+use App\Entities\Printers\PrinterInterface;
 
 /** MB
  * something for you to think about. GameController defines the core controller that runs the game. That makes sense,

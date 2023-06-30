@@ -16,10 +16,10 @@
  *
  */
 
-use CardGameApp\Entities\Players\PPCardGamePlayer;
-use CardGameApp\Entities\Pregames\CoinToss;
-use CardGameApp\Entities\Pregames\RPS;
-use CardGameApp\Entities\Printers\PPCardGameCLIPrinter;
+use App\Entities\Players\PPCardGamePlayer;
+use App\Entities\Pregames\CoinToss;
+use App\Entities\Pregames\RPS;
+use App\Entities\Printers\PPCardGameCLIPrinter;
 
 const APP_ROOT = __DIR__;
 require_once APP_ROOT . '/vendor/autoload.php';

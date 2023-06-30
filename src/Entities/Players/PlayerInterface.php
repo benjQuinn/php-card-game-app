@@ -1,6 +1,6 @@
 <?php
 
-namespace CardGameApp\Entities\Players;
+namespace App\Entities\Players;
 
 interface PlayerInterface
 {

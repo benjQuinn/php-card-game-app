@@ -1,8 +1,8 @@
 <?php
 
-namespace CardGameApp\Entities\Collections;
+namespace App\Entities\Collections;
 
-use CardGameApp\Entities\Cards\Card;
+use App\Entities\Cards\Card;
 
 abstract class CardsCollection
 {

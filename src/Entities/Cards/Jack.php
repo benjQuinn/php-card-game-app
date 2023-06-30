@@ -1,6 +1,6 @@
 <?php
 
-namespace CardGameApp\Entities\Cards;
+namespace App\Entities\Cards;
 
 class Jack extends Card
 {

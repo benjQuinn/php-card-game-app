@@ -1,5 +1,5 @@
 <?php
-namespace CardGameApp\Entities\Cards;
+namespace App\Entities\Cards;
 
 class Queen extends Card
 {

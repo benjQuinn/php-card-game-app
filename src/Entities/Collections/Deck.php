@@ -1,13 +1,13 @@
 <?php
 
-namespace CardGameApp\Entities\Collections;
+namespace App\Entities\Collections;
 
-use CardGameApp\Entities\Cards\Ace;
-use CardGameApp\Entities\Cards\Jack;
-use CardGameApp\Entities\Cards\Joker;
-use CardGameApp\Entities\Cards\King;
-use CardGameApp\Entities\Cards\Numeral;
-use CardGameApp\Entities\Cards\Queen;
+use App\Entities\Cards\Ace;
+use App\Entities\Cards\Jack;
+use App\Entities\Cards\Joker;
+use App\Entities\Cards\King;
+use App\Entities\Cards\Numeral;
+use App\Entities\Cards\Queen;
 use Traversable;
 
 class Deck extends CardsCollection implements \IteratorAggregate

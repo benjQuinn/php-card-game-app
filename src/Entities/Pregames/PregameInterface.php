@@ -1,8 +1,8 @@
 <?php
 
-namespace CardGameApp\Entities\Pregames;
+namespace App\Entities\Pregames;
 
-use CardGameApp\Entities\Players\PPCardGamePlayer;
+use App\Entities\Players\PPCardGamePlayer;
 
 
 /** MB
