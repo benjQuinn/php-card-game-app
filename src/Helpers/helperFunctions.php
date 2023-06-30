@@ -1,6 +1,6 @@
 <?php
 
-use App\Entities\GameController;
+use CardGameApp\Entities\GameController;
 
 function startCLI($players, $pregames, $printer): string
 {

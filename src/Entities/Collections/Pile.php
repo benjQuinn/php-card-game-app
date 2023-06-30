@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entities\Collections;
+namespace CardGameApp\Entities\Collections;
 
 use Traversable;
 

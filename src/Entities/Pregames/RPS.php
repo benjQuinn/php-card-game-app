@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entities\Pregames;
+namespace CardGameApp\Entities\Pregames;
 
-use App\Entities\Players\PPCardGamePlayer;
+use CardGameApp\Entities\Players\PPCardGamePlayer;
 
 class RPS extends Pregame
 {

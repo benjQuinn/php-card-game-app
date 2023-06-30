@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entities\Cards;
+namespace CardGameApp\Entities\Cards;
 
 abstract class Card
 {

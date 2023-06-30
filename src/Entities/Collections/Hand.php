@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entities\Collections;
+namespace CardGameApp\Entities\Collections;
 
-use App\Entities\Cards\Card;
+use CardGameApp\Entities\Cards\Card;
 
 class Hand extends CardsCollection
 {

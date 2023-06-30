@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Entities\Pregames;
+namespace CardGameApp\Entities\Pregames;
 
-use App\Entities\Players\PPCardGamePlayer;
+use CardGameApp\Entities\Players\PPCardGamePlayer;
+
 
 /** MB
  * THis is a good first step. I like how you've created an interface to define the blueprint for a pre-game.
