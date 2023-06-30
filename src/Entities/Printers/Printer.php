@@ -4,9 +4,11 @@ namespace App\Entities\Printers;
 
 interface Printer
 {
-    public function printGameWinner(int $playerNumber, $playerName);
+    public function print(string $text, string $colour = "default");
 
-    public function printDraw();
+    public function printGameWinner(int $playerNumber, $playerName, $colour = "default");
+
+    public function printDraw($colour = "default");
 
     public function printLineBr();
 }

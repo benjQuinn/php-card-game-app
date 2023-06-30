@@ -8,18 +8,18 @@ abstract class CardsCollection
 {
     protected array $cards;
 
-    public function add(Card $card)
+    public function add(Card $card): void
     {
         $this->cards[] = $card;
     }
 
-    public function remove(Card $card)
+    public function remove(Card $card): void
     {
             $index = array_search($card, $this->cards);
             unset($this->cards[$index]);
     }
 
-    public function shuffle()
+    public function shuffle(): void
     {
         shuffle($this->cards);
     }

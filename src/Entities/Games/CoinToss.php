@@ -9,7 +9,8 @@ class CoinToss extends TwoPlayerGame
     public string $name = "Heads or Tails?";
     private array $coin = ["heads", "tails"];
 
-    private function play(Player $firstPlayer, Player $secondPlayer) {
+    private function play(Player $firstPlayer, Player $secondPlayer): void
+    {
         $firstPlayerChoice = $this->coin[rand(0, 1)];
         $secondPlayerChoice = $this->coin[rand(0, 1)];
 

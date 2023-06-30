@@ -1,38 +1,38 @@
 <?php
 
-use App\Entities\Games\PPCardGame;
-
-function startCLI($players, $pregames, $printer): void
+function startCLI($game): void
 {
-    $pregame = $pregames[rand(0, 1)];
+    $game->printer->printLineBr();
 
-    $randIndexOne = rand(0, 6);
-    $randIndexTwo = rand(0, 6);
+    // changes the colour of the title every time the function runs (just so I know it's working as expected)
+    $randomColour = array_rand($game->printer->getColours());
+    $game->printer->print($game->getName(), $randomColour);
 
-    // Selects players from the array passed at random to automate game. Function is called recursively if the random selections are the same
-    if ($randIndexOne !== $randIndexTwo) {
-        $firstPlayer = $players[$randIndexOne];
-        $secondPlayer = $players[$randIndexTwo];
+    $game->printer->printLineBr();
+    $game->printer->printLineBr();
 
-        $gameController = new PPCardGame([$firstPlayer, $secondPlayer], $pregame, $printer);
+    $game->setUp();
 
-        $gameController->setUp();
-
-        $printer->printPlayers($firstPlayer->getName(), $secondPlayer->getName());
-
-        $printer->printLineBr();
-
-        $printer->printPregameWinner($pregame->getWinner()->getName(), $pregame->getLoser($gameController->players)->getName(), $pregame->name);
-
-        $printer->printLineBr();
-        $printer->printLineBr();
-
-        $printer->printStartGame();
-
-        $printer->printLineBr();
-
-        $gameController->runGame();
-    } else {
-        startCLI($players, $pregames, $printer);
+    $playerNames = [];
+    foreach ($game->players as $player)
+    {
+        $playerNames[] = $player->getName();
     }
+
+    $game->printer->printPlayers(...$playerNames);
+
+    $game->printer->printLineBr();
+
+    $game->printer->printPregameWinner($game->pregame->getWinner()->getName(), $game->pregame->getLoser($game->players)->getName(), $game->pregame->name);
+
+    $game->printer->printLineBr();
+    $game->printer->printLineBr();
+
+    $game->printer->printStartGame("green");
+
+    $game->printer->printLineBr();
+
+    $game->runGame();
+
+    $game->printer->printLineBr();
 }

@@ -26,7 +26,7 @@ class Deck extends CardsCollection implements \IteratorAggregate
      * Creates a 54 deck of cards. 2-10, Ace, Jack, King Queen of each suit and two Joker cards
      * @return void
      */
-    public function createDeck()
+    public function createDeck(): void
     {
         $suits = ["Spades", "Clubs", "Hearts", "Diamonds"];
         $faces = ["2", "3", "4", "5", "6", "7", "8", "9", "10"];

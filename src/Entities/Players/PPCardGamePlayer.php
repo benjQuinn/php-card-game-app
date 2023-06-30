@@ -27,22 +27,9 @@ class PPCardGamePlayer implements Player
      * @param PPCardGame $gameController
      * @return void
      */
-    private function updateLeader(PPCardGame $gameController): void
+    private function updateIsLeader(PPCardGame $gameController): void
     {
-        // changes isLeader to true if whoIsLeader() returns the instances player number and vice versa
         $this->isLeader = $gameController->whoIsLeader() === $this->playerNumber;
-    }
-
-    /**
-     * Generates rock, paper or scissors string randomly every time it is called
-     * @return string
-     */
-    public function generateRockPaperScissors(): string
-    {
-        $rps = ["rock", "paper", "scissors"];
-        $randomIndex = rand(0, 2);
-
-        return $rps[$randomIndex];
     }
 
     public function getName(): string
@@ -62,10 +49,9 @@ class PPCardGamePlayer implements Player
      */
     public function playCard(PPCardGame $gameController): Card|false
     {
-
         $card = false;
 
-        $this->updateLeader($gameController);
+        $this->updateIsLeader($gameController);
         // sort cards in ascending order
         $this->hand->sort();
 
@@ -120,7 +106,7 @@ class PPCardGamePlayer implements Player
      * Initialises the players properties - used when restarting the game
      * @return void
      */
-    public function initialisePlayer()
+    public function initialisePlayer(): void
     {
         $this->hand = new Hand();
         $this->scorePile = new Pile();

@@ -23,9 +23,11 @@ use App\Entities\Players\PPCardGamePlayer;
  */
 interface Game
 {
+    public function getName(): string;
+
     public function decideWinner(Player $playerOne, Player $playerTwo): Player|false;
 
     public function getWinner(): Player;
 
-    public function getLoser(array $players): Player;
+    public function getLoser(array $players): Player|false;
 }

@@ -16,6 +16,7 @@
  *
  */
 
+use App\Entities\Games\PPCardGame;
 use App\Entities\Players\PPCardGamePlayer;
 use App\Entities\Games\CoinToss;
 use App\Entities\Games\RPS;
@@ -24,10 +25,7 @@ use App\Entities\Printers\PPCardGameCLIPrinter;
 const APP_ROOT = __DIR__;
 require_once APP_ROOT . '/vendor/autoload.php';
 
-$pregames = [
-    new RPS(),
-    new CoinToss()
-];
+$printer = new PPCardGameCLIPrinter();
 
 $players = [
     new PPCardGamePlayer("Ben"),
@@ -39,10 +37,25 @@ $players = [
     new PPCardGamePlayer("Annesley")
 ];
 
-$printer = new PPCardGameCLIPrinter();
+$randIndexOne = rand(0, count($players) - 1);
+do {
+    $randIndexTwo = rand(0, count($players) - 1);
+} while ($randIndexOne === $randIndexTwo);
 
-$printer->printLineBr();
+$pregames = [
+    new RPS(),
+    new CoinToss()
+];
 
-startCLI($players, $pregames, $printer);
+$pregame = $pregames[rand(0, count($pregames) - 1)];
 
-$printer->printLineBr();
+$game = new PPCardGame(
+    [
+        $players[$randIndexOne],
+        $players[$randIndexTwo]
+    ],
+    $pregame,
+    $printer
+);
+
+startCLI($game);
