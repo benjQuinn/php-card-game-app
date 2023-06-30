@@ -1,6 +1,6 @@
 <?php
 
-namespace CardGameApp\Entities\Printers;
+namespace App\Entities\Printers;
 
 interface PrinterInterface
 {

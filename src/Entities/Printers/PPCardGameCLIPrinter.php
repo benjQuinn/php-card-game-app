@@ -1,6 +1,6 @@
 <?php
 
-namespace CardGameApp\Entities\Printers;
+namespace App\Entities\Printers;
 
 class PPCardGameCLIPrinter implements PrinterInterface
 {

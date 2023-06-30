@@ -1,11 +1,11 @@
 <?php
 
-namespace CardGameApp\Entities\Players;
+namespace App\Entities\Players;
 
-use CardGameApp\Entities\Cards\Card;
-use CardGameApp\Entities\Collections\Hand;
-use CardGameApp\Entities\Collections\Pile;
-use CardGameApp\Entities\GameController;
+use App\Entities\Cards\Card;
+use App\Entities\Collections\Hand;
+use App\Entities\Collections\Pile;
+use App\Entities\GameController;
 
 class PPCardGamePlayer implements PlayerInterface
 {
