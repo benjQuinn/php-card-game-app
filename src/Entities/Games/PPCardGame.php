@@ -179,58 +179,58 @@ class PPCardGame extends TwoPlayerGame
      * Automates a game. The function sets up the table and plays through each round of the game, displaying the winner of each, before displaying the winner based on each player's score pile after the final round
      * @return void
      */
-    public function runGame(): void
-    {
-        foreach ($this->players as $player) {
-            $player->drawCards($this, 13);
-        }
-
-        for ($round = 1; $round <= 27; $round++) {
-            $leader = $this->players[$this->whoIsLeader()];
-            $opponent = $this->players[$this->whoIsNotLeader()];
-
-            $roundWinner = $this->play($leader, $opponent);
-
-            // displays the winner of each round
-            $playedCards = $this->getPlayedCards();
-
-            foreach ($playedCards as $index => $card) {
-                if ($index === 0) {
-                    $this->printer->printPlayedCard($leader->getPlayerNumber(), $card->getFace(), $card->getSuit());
-                } else {
-                    $this->printer->printPlayedCard($opponent->getPlayerNumber(), $card->getFace(), $card->getSuit());
-                }
-            }
-
-            $this->printer->printRoundWinner($this->getCurrentRound(), $roundWinner, "cyan");
-
-            // round winner picks up the two played cards and adds them to their score pile
-            foreach ($playedCards as $card) {
-                // add played card to winner's score pile
-                $this->players[$roundWinner]->scorePile->add($card);
-                // and remove it from the table's played cards pile
-                $this->playedCards->remove($card);
-            }
-            // after the winner picks up the played cards from this round, each player gets a new card from the deck IF the deck is not empty
-            if (!empty($this->deck->getCards())) {
-                foreach ($this->players as $player) {
-                    $player->drawCards($this, 1);
-                }
-            }
-        }
-
-        foreach ($this->players as $player) {
-            $this->printer->printScore($player->getPlayerNumber(), $player->scorePile->count(), "magenta");
-        }
-
-        $this->decideWinner(...$this->players);
-
-        if ($this->winner) {
-            $this->printer->printGameWinner($this->winner->getPlayerNumber(), $this->winner->getName(), "green");
-        } else {
-            $this->printer->printDraw("yellow");
-        }
-    }
+//    public function runGame(): void
+//    {
+//        foreach ($this->players as $player) {
+//            $player->drawCards($this, 13);
+//        }
+//
+//        for ($round = 1; $round <= 27; $round++) {
+//            $leader = $this->players[$this->whoIsLeader()];
+//            $opponent = $this->players[$this->whoIsNotLeader()];
+//
+//            $roundWinner = $this->play($leader, $opponent);
+//
+//            // displays the winner of each round
+//            $playedCards = $this->getPlayedCards();
+//
+//            foreach ($playedCards as $index => $card) {
+//                if ($index === 0) {
+//                    $this->printer->printPlayedCard($leader->getPlayerNumber(), $card->getFace(), $card->getSuit());
+//                } else {
+//                    $this->printer->printPlayedCard($opponent->getPlayerNumber(), $card->getFace(), $card->getSuit());
+//                }
+//            }
+//
+//            $this->printer->printRoundWinner($this->getCurrentRound(), $roundWinner, "cyan");
+//
+//            // round winner picks up the two played cards and adds them to their score pile
+//            foreach ($playedCards as $card) {
+//                // add played card to winner's score pile
+//                $this->players[$roundWinner]->scorePile->add($card);
+//                // and remove it from the table's played cards pile
+//                $this->playedCards->remove($card);
+//            }
+//            // after the winner picks up the played cards from this round, each player gets a new card from the deck IF the deck is not empty
+//            if (!empty($this->deck->getCards())) {
+//                foreach ($this->players as $player) {
+//                    $player->drawCards($this, 1);
+//                }
+//            }
+//        }
+//
+//        foreach ($this->players as $player) {
+//            $this->printer->printScore($player->getPlayerNumber(), $player->scorePile->count(), "magenta");
+//        }
+//
+//        $this->decideWinner(...$this->players);
+//
+//        if ($this->winner) {
+//            $this->printer->printGameWinner($this->winner->getPlayerNumber(), $this->winner->getName(), "green");
+//        } else {
+//            $this->printer->printDraw("yellow");
+//        }
+//    }
 };
 
 //    /**
