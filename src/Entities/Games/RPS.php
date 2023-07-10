@@ -25,7 +25,7 @@ class RPS extends TwoPlayerGame
         return $rps[$randomIndex];
     }
 
-    private function play(Player $firstPlayer, Player $secondPlayer): void
+    public function play(Player $firstPlayer, Player $secondPlayer): void
     {
 
         $firstPlayerRPS = $this->generateRockPaperScissors();
@@ -47,9 +47,8 @@ class RPS extends TwoPlayerGame
         }
     }
 
-    public function decideWinner(Player $playerOne, Player $playerTwo): Player
+    public function getWinner(): Player
     {
-        $this->play($playerOne, $playerTwo);
         return $this->winner;
     }
 }

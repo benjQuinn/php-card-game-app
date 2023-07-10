@@ -5,15 +5,14 @@ namespace App\Entities\Players;
 use App\Entities\Cards\Card;
 use App\Entities\Collections\Hand;
 use App\Entities\Collections\Pile;
+use App\Entities\Games\Game;
 use App\Entities\Games\PPCardGame;
 
-class PPCardGamePlayer implements Player
+class PPCardGamePlayer extends CardGamePlayer
 {
-    private int $playerNumber = 0;
-    private string $name;
-    public Hand $hand;
     public Pile $scorePile;
-    private bool $isLeader = false;
+    protected bool $isLeader = false;
+    protected int $playerNumber = 0;
 
     public function __construct(string $name)
     {
@@ -22,24 +21,19 @@ class PPCardGamePlayer implements Player
         $this->scorePile = new Pile();
     }
 
-    /**
-     * changes isLeader to true if whoIsLeader() on Table object returns the instances player number and vice versa
-     * @param PPCardGame $gameController
-     * @return void
-     */
-    private function updateIsLeader(PPCardGame $gameController): void
-    {
-        $this->isLeader = $gameController->whoIsLeader() === $this->playerNumber;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
     public function getPlayerNumber(): int
     {
         return $this->playerNumber;
+    }
+
+    public function changePlayerNumber(int $number): void
+    {
+        $this->playerNumber = $number;
+    }
+
+    public function updateIsLeader(PPCardGame $game): void
+    {
+        $this->isLeader = $game->whoIsLeader() === $this->playerNumber;
     }
 
     /**
@@ -82,34 +76,5 @@ class PPCardGamePlayer implements Player
             }
         }
         return $card;
-    }
-
-    /**
-     * @param PPCardGame $gameController
-     * @param int $cards
-     * @return void
-     */
-    public function drawCards(PPCardGame $gameController, int $cards): void
-    {
-        for ($i = 0; $i < $cards; $i++)
-        {
-            $this->hand->add($gameController->draw());
-        }
-    }
-
-    public function changePlayerNumber(int $number): void
-    {
-        $this->playerNumber = $number;
-    }
-
-    /**
-     * Initialises the players properties - used when restarting the game
-     * @return void
-     */
-    public function initialisePlayer(): void
-    {
-        $this->hand = new Hand();
-        $this->scorePile = new Pile();
-        $this->isLeader = false;
     }
 }

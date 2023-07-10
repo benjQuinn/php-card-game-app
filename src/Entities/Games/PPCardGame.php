@@ -6,35 +6,28 @@ use App\Entities\Cards\Jack;
 use App\Entities\Cards\Joker;
 use App\Entities\Collections\Deck;
 use App\Entities\Collections\Pile;
+use App\Entities\Players\CardGamePlayer;
 use App\Entities\Players\PPCardGamePlayer;
 use App\Entities\Players\Player;
 use App\Entities\Printers\Printer;
 
-class PPCardGame extends TwoPlayerGame
+class PPCardGame extends CardGame
 {
     public Game $pregame;
-    public Printer $printer;
-    public array $players;
-    public Deck $deck;
-    public Pile $playedCards;
-    public int $currentLeader = 0;
-    private int $currentRound = 0;
 
-    public function __construct(array $players, TwoPlayerGame $pregame, Printer $printer)
+    public function __construct(array $players, Printer $printer, string $name, Deck $deck, Pile $pile, TwoPlayerGame $pregame)
     {
-        $this->name = "Procure Plus Card Game App";
+
+        parent::__construct($players, $printer, $name, $deck, $pile);
         $this->pregame = $pregame;
-        $this->printer = $printer;
-        $this->players = $players;
-        $this->deck = new Deck();
-        $this->playedCards = new Pile();
     }
 
     public function setUp(): int
     {
         $this->deck->shuffle();
 
-        $winner = $this->pregame->decideWinner(...$this->players);
+        $this->pregame->play(...$this->players);
+        $winner = $this->pregame->getWinner();
 
         // set the players in the array, indexed by their player number, as determined by the pregame
         $this->players = [
@@ -47,48 +40,13 @@ class PPCardGame extends TwoPlayerGame
         return $this->currentLeader;
     }
 
-    public function draw()
-    {
-        // Returns the top card of the deck
-        $cards = $this->deck->getCards();
-        $card = array_pop($cards);
-
-        if (!empty($this->deck->getCards())) {
-            $this->deck->remove($card);
-        }
-
-        return $card;
-    }
-
-    /**
-     * Returns the player number of the current leader when called
-     * @return int
-     */
-    public function whoIsLeader(): int
-    {
-        return $this->currentLeader;
-    }
-
-    /**
-     * Returns the player number of the player that is not the leader when called
-     * @return int
-     */
-    public function whoIsNotLeader()
-    {
-        foreach ($this->players as $playerNumber => $player) {
-            if ($playerNumber !== $this->currentLeader) {
-                return $playerNumber;
-            }
-        }
-    }
-
     /**
      * Decides who is the winner when both players play their card
      * @param PPCardGamePlayer $leader the player that is the current leader when called
      * @param PPCardGamePlayer $opponent the player that is not the current leader when called
      * @return int the player number of the round winner
      */
-    public function play(PPCardGamePlayer $leader, PPCardGamePlayer $opponent): int
+    public function play(CardGamePlayer $leader, CardGamePlayer $opponent): int
     {
         $this->currentRound++;
         /** MB:
@@ -129,31 +87,7 @@ class PPCardGame extends TwoPlayerGame
         return $this->currentLeader;
     }
 
-    /**
-     * Returns the two played cards
-     * @return array of cards
-     */
-    public function getPlayedCards(): array
-    {
-        return $this->playedCards->getCards();
-    }
-
-    /**
-     * Returns the current round when called
-     * @return int
-     */
-    public function getCurrentRound(): int
-    {
-        return $this->currentRound;
-    }
-
-    /**
-     * Works out the winner based on each player's score pile
-     * @param Player $playerOne
-     * @param Player $playerTwo
-     * @return Player|false
-     */
-    public function decideWinner(Player $playerOne, Player $playerTwo): Player|false
+    public function decideWinner(CardGamePlayer $playerOne, CardGamePlayer $playerTwo): Player|false
     {
         $scores = [];
 
@@ -174,88 +108,4 @@ class PPCardGame extends TwoPlayerGame
         }
         return $this->winner;
     }
-
-    /**
-     * Automates a game. The function sets up the table and plays through each round of the game, displaying the winner of each, before displaying the winner based on each player's score pile after the final round
-     * @return void
-     */
-//    public function runGame(): void
-//    {
-//        foreach ($this->players as $player) {
-//            $player->drawCards($this, 13);
-//        }
-//
-//        for ($round = 1; $round <= 27; $round++) {
-//            $leader = $this->players[$this->whoIsLeader()];
-//            $opponent = $this->players[$this->whoIsNotLeader()];
-//
-//            $roundWinner = $this->play($leader, $opponent);
-//
-//            // displays the winner of each round
-//            $playedCards = $this->getPlayedCards();
-//
-//            foreach ($playedCards as $index => $card) {
-//                if ($index === 0) {
-//                    $this->printer->printPlayedCard($leader->getPlayerNumber(), $card->getFace(), $card->getSuit());
-//                } else {
-//                    $this->printer->printPlayedCard($opponent->getPlayerNumber(), $card->getFace(), $card->getSuit());
-//                }
-//            }
-//
-//            $this->printer->printRoundWinner($this->getCurrentRound(), $roundWinner, "cyan");
-//
-//            // round winner picks up the two played cards and adds them to their score pile
-//            foreach ($playedCards as $card) {
-//                // add played card to winner's score pile
-//                $this->players[$roundWinner]->scorePile->add($card);
-//                // and remove it from the table's played cards pile
-//                $this->playedCards->remove($card);
-//            }
-//            // after the winner picks up the played cards from this round, each player gets a new card from the deck IF the deck is not empty
-//            if (!empty($this->deck->getCards())) {
-//                foreach ($this->players as $player) {
-//                    $player->drawCards($this, 1);
-//                }
-//            }
-//        }
-//
-//        foreach ($this->players as $player) {
-//            $this->printer->printScore($player->getPlayerNumber(), $player->scorePile->count(), "magenta");
-//        }
-//
-//        $this->decideWinner(...$this->players);
-//
-//        if ($this->winner) {
-//            $this->printer->printGameWinner($this->winner->getPlayerNumber(), $this->winner->getName(), "green");
-//        } else {
-//            $this->printer->printDraw("yellow");
-//        }
-//    }
-};
-
-//    /**
-//     * Initialises the tables properties - used when restarting the game
-//     * @return void
-//     */
-//    public function initialiseGame(): void
-//    {
-//        $this->deck = new Deck();
-//        $this->playedCards = new Pile();
-//        $this->currentLeader = 0;
-//        $this->currentRound = 0;
-//    }
-//
-//    /** Initialises the player and table properties so the game can be restarted
-//     * @return void
-//     */
-//    public function restartGame(): void
-//    {
-//        // initialise table properties
-//        $this->initialiseGame();
-//        // initialise both player properties
-//        foreach ($this->players as $player)
-//        {
-//            $player->initialisePlayer();
-//        }
-//    }
-//}
+}

@@ -16,6 +16,8 @@
  *
  */
 
+use App\Entities\Collections\Deck;
+use App\Entities\Collections\Pile;
 use App\Entities\Games\PPCardGame;
 use App\Entities\Players\PPCardGamePlayer;
 use App\Entities\Games\CoinToss;
@@ -54,8 +56,12 @@ $game = new PPCardGame(
         $players[$randIndexOne],
         $players[$randIndexTwo]
     ],
-    $pregame,
-    $printer
+    $printer,
+    "Procure Plus Card Game App",
+    new Deck(),
+    new Pile(),
+    $pregame
+
 );
 
-startCLI($game);
+startPPCardGame_CLI($game);

@@ -1,5 +1,7 @@
 <?php
 
+// PP Card Game Helpers
+
 function runPPCardGame($game): void
 {
     foreach ($game->players as $player) {
@@ -53,7 +55,7 @@ function runPPCardGame($game): void
     }
 }
 
-function startCLI($game): void
+function startPPCardGame_CLI($game): void
 {
     $game->printer->printLineBr();
 
