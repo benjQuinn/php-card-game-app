@@ -69,19 +69,18 @@ class PPCardGamePlayer extends CardGamePlayer
                 $card = end($filteredHand);
             }
 
-            if ($card)
-            {
-                $this->hand->remove($card);
-            }
-
         } else {
             // if player is the leader they play their highest value card
             if (!$this->hand->isEmpty())
             {
                 $card = $this->hand->returnLastCard();
-                $this->hand->remove($card);
                 $gameController->playedCards->add($card);
             }
+        }
+
+        if ($card)
+        {
+            $this->hand->remove($card);
         }
         return $card;
     }
