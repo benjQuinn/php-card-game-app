@@ -6,13 +6,23 @@ use App\Entities\Cards\Card;
 
 class Hand extends CardsCollection
 {
-    public function returnLastCard(): Card
+    public function returnLastCard(): Card|null
     {
-        return array_pop($this->cards);
+        if (!empty($this->cards))
+        {
+            return end($this->cards);
+        } else {
+            return null;
+        }
     }
 
-    public function returnFirstCard(): Card
+    public function returnFirstCard(): Card|null
     {
-        return array_shift($this->cards);
+        if (!empty($this->cards))
+        {
+            return current($this->cards);
+        } else {
+            return null;
+        }
     }
 }

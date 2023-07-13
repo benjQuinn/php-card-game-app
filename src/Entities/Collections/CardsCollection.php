@@ -24,7 +24,7 @@ abstract class CardsCollection
         shuffle($this->cards);
     }
 
-    public function sort()
+    public function sort(): void
     {
         usort($this->cards, function ($a, $b)
         {

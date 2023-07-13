@@ -67,21 +67,24 @@ class PPCardGame extends CardGame
         $leadersPlayedCard = $leader->playCard($this);
         $opponentsPlayedCard = $opponent->playCard($this);
         // adds opponents played card to the playedCards pile
-        $this->playedCards->add($opponentsPlayedCard);
 
-        // if leader has the highest value card they remain the leader
-        if (($leadersPlayedCard->getValue() > $opponentsPlayedCard->getValue()) || ($leadersPlayedCard instanceof Joker && $opponentsPlayedCard instanceof Jack)) {
-            $this->currentLeader = $leader->getPlayerNumber();
-        }
-        // if opponent has the highest value card they become the leader
-        if (($leadersPlayedCard->getValue() < $opponentsPlayedCard->getValue()) || ($leadersPlayedCard instanceof Jack && $opponentsPlayedCard instanceof Joker)) {
-            $this->currentLeader = $opponent->getPlayerNumber();
-        }
-        // if both cards played have the same value, they are removed from the game and both players play another card
-        if ($leadersPlayedCard->getValue() === $opponentsPlayedCard->getValue()) {
-            $this->playedCards->remove($leadersPlayedCard);
-            $this->playedCards->remove($opponentsPlayedCard);
-            return $this->play($leader, $opponent);
+        if ($leadersPlayedCard && $opponentsPlayedCard) {
+            $this->playedCards->add($opponentsPlayedCard);
+
+            // if leader has the highest value card they remain the leader
+            if (($leadersPlayedCard->getValue() > $opponentsPlayedCard->getValue()) || ($leadersPlayedCard instanceof Joker && $opponentsPlayedCard instanceof Jack)) {
+                $this->currentLeader = $leader->getPlayerNumber();
+            }
+            // if opponent has the highest value card they become the leader
+            if (($leadersPlayedCard->getValue() < $opponentsPlayedCard->getValue()) || ($leadersPlayedCard instanceof Jack && $opponentsPlayedCard instanceof Joker)) {
+                $this->currentLeader = $opponent->getPlayerNumber();
+            }
+            // if both cards played have the same value, they are removed from the game and both players play another card
+            if ($leadersPlayedCard->getValue() === $opponentsPlayedCard->getValue()) {
+                $this->playedCards->remove($leadersPlayedCard);
+                $this->playedCards->remove($opponentsPlayedCard);
+                return $this->play($leader, $opponent);
+            }
         }
         // returns the winner of the round
         return $this->currentLeader;

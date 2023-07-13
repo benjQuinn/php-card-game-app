@@ -5,7 +5,6 @@ namespace App\Entities\Players;
 use App\Entities\Cards\Card;
 use App\Entities\Collections\Hand;
 use App\Entities\Collections\Pile;
-use App\Entities\Games\Game;
 use App\Entities\Games\PPCardGame;
 
 class PPCardGamePlayer extends CardGamePlayer
@@ -41,9 +40,9 @@ class PPCardGamePlayer extends CardGamePlayer
      * @param PPCardGame $gameController
      * @return Card|false
      */
-    public function playCard(PPCardGame $gameController): Card|false
+    public function playCard(PPCardGame $gameController): Card|null
     {
-        $card = false;
+        $card = null;
 
         $this->updateIsLeader($gameController);
         // sort cards in ascending order
@@ -53,10 +52,13 @@ class PPCardGamePlayer extends CardGamePlayer
         {
             // get the card the leader has just played
             $playedCards = $gameController->playedCards->getCards();
-            $leadersPlayedCard = reset($playedCards);
+            $leadersPlayedCard = current($playedCards);
 
             // filters hand to only show cards that match suit of the played card
-            $filteredHand = $this->hand->filter($leadersPlayedCard->getSuit());
+            if ($leadersPlayedCard instanceof Card)
+            {
+                $filteredHand = $this->hand->filter($leadersPlayedCard->getSuit());
+            }
 
             if (empty($filteredHand))
             {
@@ -64,7 +66,12 @@ class PPCardGamePlayer extends CardGamePlayer
                 $card = $this->hand->returnFirstCard();
             } else {
                 // else they play their highest value matching card
-                $card = array_pop($filteredHand);
+                $card = end($filteredHand);
+            }
+
+            if ($card)
+            {
+                $this->hand->remove($card);
             }
 
         } else {
@@ -72,6 +79,7 @@ class PPCardGamePlayer extends CardGamePlayer
             if (!$this->hand->isEmpty())
             {
                 $card = $this->hand->returnLastCard();
+                $this->hand->remove($card);
                 $gameController->playedCards->add($card);
             }
         }
