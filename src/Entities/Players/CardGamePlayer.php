@@ -3,25 +3,18 @@
 namespace App\Entities\Players;
 
 use App\Entities\Collections\Hand;
-use App\Entities\Collections\Pile;
-use App\Entities\Games\PPCardGame;
+use App\Entities\Games\CardGame;
 
 abstract class CardGamePlayer implements Player
 {
     protected int $playerNumber = 0;
     protected string $name;
     protected Hand $hand;
-    protected bool $isLeader = false;
 
-    public function __construct(string $name)
+    public function __construct(string $name, Hand $hand)
     {
         $this->name = $name;
-        $this->hand = new Hand();
-    }
-
-    public function updateIsLeader(PPCardGame $game): void
-    {
-        $this->isLeader = $game->whoIsLeader() === $this->playerNumber;
+        $this->hand = $hand;
     }
 
     public function getName(): string
@@ -34,7 +27,7 @@ abstract class CardGamePlayer implements Player
         return $this->playerNumber;
     }
 
-    public function drawCards(PPCardGame $game, int $cards): void
+    public function drawCards(CardGame $game, int $cards): void
     {
         for ($i = 0; $i < $cards; $i++)
         {
@@ -45,11 +38,5 @@ abstract class CardGamePlayer implements Player
     public function changePlayerNumber(int $number): void
     {
         $this->playerNumber = $number;
-    }
-
-    public function initialisePlayer(): void
-    {
-        $this->hand = new Hand();
-        $this->isLeader = false;
     }
 }

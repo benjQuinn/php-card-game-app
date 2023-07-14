@@ -7,7 +7,6 @@ use App\Entities\Cards\Joker;
 use App\Entities\Collections\Deck;
 use App\Entities\Collections\Hand;
 use App\Entities\Collections\Pile;
-use App\Entities\Players\CardGamePlayer;
 use App\Entities\Players\PPCardGamePlayer;
 use App\Entities\Players\Player;
 use App\Entities\Printers\Printer;
@@ -15,6 +14,8 @@ use App\Entities\Printers\Printer;
 class PPCardGame extends CardGame
 {
     public Game $pregame;
+    public int $currentLeader = 0;
+    protected int $currentRound = 0;
 
     public function __construct(array $players, Printer $printer, string $name, Deck $deck, Pile $pile, TwoPlayerGame $pregame)
     {
@@ -23,7 +24,7 @@ class PPCardGame extends CardGame
         $this->pregame = $pregame;
     }
 
-    public function setUp(): int
+    public function setUp(): void
     {
         $this->deck->shuffle();
 
@@ -37,11 +38,32 @@ class PPCardGame extends CardGame
         ];
 
         $this->currentLeader = $winner->getPlayerNumber();
+    }
 
+    public function whoIsLeader(): int
+    {
         return $this->currentLeader;
     }
 
-    public function playRound(CardGamePlayer $leader, CardGamePlayer $opponent): void
+    public function whoIsNotLeader(): ?int
+    {
+        $notLeader = null;
+        foreach ($this->players as $playerNumber => $player)
+        {
+            if ($playerNumber !== $this->currentLeader)
+            {
+                $notLeader = $playerNumber;
+            }
+        }
+        return $notLeader;
+    }
+
+    public function getCurrentRound(): int
+    {
+        return $this->currentRound;
+    }
+
+    public function playRound(PPCardGamePlayer $leader, PPCardGamePlayer $opponent): void
     {
         if ($leader->hasCards() && $opponent->hasCards())
         {
@@ -62,7 +84,7 @@ class PPCardGame extends CardGame
         $this->currentRound++;
     }
 
-    public function decideRoundWinner(CardGamePlayer $leader, CardGamePlayer $opponent, Pile $playedCards): int
+    public function decideRoundWinner(PPCardGamePlayer $leader, PPCardGamePlayer $opponent, Pile $playedCards): int
     {
         if (!$this->playedCards->isEmpty())
         {

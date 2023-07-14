@@ -15,8 +15,7 @@ abstract class CardsCollection
 
     public function add(Card $card, string|int $index = null): void
     {
-        if ($index === null)
-        {
+        if ($index === null) {
             $this->cards[] = $card;
         } else {
             $this->cards[$index] = $card;
@@ -25,8 +24,8 @@ abstract class CardsCollection
 
     public function remove(Card $card): void
     {
-            $index = array_search($card, $this->cards);
-            unset($this->cards[$index]);
+        $index = array_search($card, $this->cards);
+        unset($this->cards[$index]);
     }
 
     public function shuffle(): void
@@ -36,8 +35,7 @@ abstract class CardsCollection
 
     public function sort(): void
     {
-        usort($this->cards, function ($a, $b)
-        {
+        usort($this->cards, function ($a, $b) {
             return $a->getValue() - $b->getValue();
         });
     }
@@ -46,10 +44,8 @@ abstract class CardsCollection
     {
         $filteredCards = new Hand();
 
-        foreach ($this->cards as $card)
-        {
-            if ($card->getSuit() === $suit)
-            {
+        foreach ($this->cards as $card) {
+            if ($card->getSuit() === $suit) {
                 $filteredCards->add($card);
             }
         }
@@ -69,6 +65,17 @@ abstract class CardsCollection
     public function isEmpty(): bool
     {
         return empty($this->cards);
+    }
+
+    public function removeAllCards(): void
+    {
+        if (!empty($this->cards))
+        {
+            foreach ($this->cards as $card)
+            {
+                $this->remove($card);
+            }
+        }
     }
 
 }

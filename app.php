@@ -17,6 +17,7 @@
  */
 
 use App\Entities\Collections\Deck;
+use App\Entities\Collections\Hand;
 use App\Entities\Collections\Pile;
 use App\Entities\Games\PPCardGame;
 use App\Entities\Players\PPCardGamePlayer;
@@ -30,13 +31,13 @@ require_once APP_ROOT . '/vendor/autoload.php';
 $printer = new PPCardGameCLIPrinter();
 
 $players = [
-    new PPCardGamePlayer("Ben"),
-    new PPCardGamePlayer("Mani"),
-    new PPCardGamePlayer("Aidan"),
-    new PPCardGamePlayer("Mike"),
-    new PPCardGamePlayer("Omar"),
-    new PPCardGamePlayer("Anestis"),
-    new PPCardGamePlayer("Annesley")
+    new PPCardGamePlayer("Ben", new Hand(), new Pile()),
+    new PPCardGamePlayer("Mani", new Hand(), new Pile()),
+    new PPCardGamePlayer("Aidan", new Hand(), new Pile()),
+    new PPCardGamePlayer("Mike", new Hand(), new Pile()),
+    new PPCardGamePlayer("Omar", new Hand(), new Pile()),
+    new PPCardGamePlayer("Anestis", new Hand(), new Pile()),
+    new PPCardGamePlayer("Annesley", new Hand(), new Pile())
 ];
 
 $randIndexOne = rand(0, count($players) - 1);
@@ -51,17 +52,6 @@ $pregames = [
 
 $pregame = $pregames[rand(0, count($pregames) - 1)];
 
-$game = new PPCardGame(
-    [
-        $players[$randIndexOne],
-        $players[$randIndexTwo]
-    ],
-    $printer,
-    "Procure Plus Card Game App",
-    new Deck(),
-    new Pile(),
-    $pregame
-
-);
+$game = new PPCardGame([$players[$randIndexOne], $players[$randIndexTwo]], $printer, "Procure Plus Card Game", new Deck(), new Pile(), $pregame);
 
 startPPCardGame_CLI($game);

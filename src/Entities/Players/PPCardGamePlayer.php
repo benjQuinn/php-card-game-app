@@ -4,6 +4,7 @@ namespace App\Entities\Players;
 
 use App\Entities\Cards\Card;
 use App\Entities\Collections\CardsCollection;
+use App\Entities\Collections\Hand;
 use App\Entities\Collections\Pile;
 use App\Entities\Games\PPCardGame;
 
@@ -14,10 +15,10 @@ class PPCardGamePlayer extends CardGamePlayer
     protected int $playerNumber = 0;
     public CardsCollection $filteredHand;
 
-    public function __construct(string $name)
+    public function __construct(string $name, Hand $hand, Pile $pile)
     {
-        parent::__construct($name);
-        $this->scorePile = new Pile();
+        parent::__construct($name, $hand);
+        $this->scorePile = $pile;
     }
 
     private function setFilteredHand(CardsCollection $collection): void

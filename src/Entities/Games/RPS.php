@@ -12,6 +12,8 @@ class RPS extends TwoPlayerGame
         "paper" => "rock",
         "scissors" => "paper"
     ];
+    private string $firstPlayerRPS;
+    private string $secondPlayerRPS;
 
     /**
      * Generates rock, paper or scissors string randomly every time it is called
@@ -25,16 +27,20 @@ class RPS extends TwoPlayerGame
         return $rps[$randomIndex];
     }
 
+    public function setUp(): void
+    {
+        $this->firstPlayerRPS = $this->generateRockPaperScissors();
+        $this->secondPlayerRPS = $this->generateRockPaperScissors();
+    }
+
     public function play(Player $firstPlayer, Player $secondPlayer): void
     {
+        $this->setUp();
 
-        $firstPlayerRPS = $this->generateRockPaperScissors();
-        $secondPlayerRPS = $this->generateRockPaperScissors();
-
-        if ($firstPlayerRPS === $secondPlayerRPS)
+        if ($this->firstPlayerRPS === $this->secondPlayerRPS)
         {
             $this->play($firstPlayer, $secondPlayer);
-        } if ($this->winningConditions[$firstPlayerRPS] === $secondPlayerRPS)
+        } if ($this->winningConditions[$this->firstPlayerRPS] === $this->secondPlayerRPS)
         {
             $this->winner = $firstPlayer;
             $firstPlayer->changePlayerNumber(1);

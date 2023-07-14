@@ -12,8 +12,6 @@ abstract class CardGame extends TwoPlayerGame
     public array $players;
     public Deck $deck;
     public Pile $playedCards;
-    public int $currentLeader = 0;
-    protected int $currentRound = 0;
 
     public function __construct(array $players, Printer $printer, string $name, Deck $deck, Pile $pile)
     {
@@ -38,31 +36,10 @@ abstract class CardGame extends TwoPlayerGame
         return $card;
     }
 
-    public function whoIsLeader(): int
-    {
-        return $this->currentLeader;
-    }
-
-    public function whoIsNotLeader(): ?int
-    {
-        $notLeader = null;
-        foreach ($this->players as $playerNumber => $player)
-        {
-            if ($playerNumber !== $this->currentLeader)
-            {
-                $notLeader = $playerNumber;
-            }
-        }
-        return $notLeader;
-    }
-
     public function getPlayedCards(): Pile
     {
         return $this->playedCards;
     }
 
-    public function getCurrentRound(): int
-    {
-        return $this->currentRound;
-    }
+
 }
