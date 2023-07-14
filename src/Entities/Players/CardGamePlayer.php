@@ -3,6 +3,7 @@
 namespace App\Entities\Players;
 
 use App\Entities\Collections\Hand;
+use App\Entities\Collections\Pile;
 use App\Entities\Games\PPCardGame;
 
 abstract class CardGamePlayer implements Player
@@ -11,6 +12,12 @@ abstract class CardGamePlayer implements Player
     protected string $name;
     protected Hand $hand;
     protected bool $isLeader = false;
+
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+        $this->hand = new Hand();
+    }
 
     public function updateIsLeader(PPCardGame $game): void
     {

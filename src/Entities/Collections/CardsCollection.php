@@ -8,9 +8,19 @@ abstract class CardsCollection
 {
     protected array $cards;
 
-    public function add(Card $card): void
+    public function __construct()
     {
-        $this->cards[] = $card;
+        $this->cards = [];
+    }
+
+    public function add(Card $card, string|int $index = null): void
+    {
+        if ($index === null)
+        {
+            $this->cards[] = $card;
+        } else {
+            $this->cards[$index] = $card;
+        }
     }
 
     public function remove(Card $card): void
@@ -32,15 +42,15 @@ abstract class CardsCollection
         });
     }
 
-    public function filter($suit): array
+    public function filter($suit): Hand
     {
-        $filteredCards = [];
+        $filteredCards = new Hand();
 
         foreach ($this->cards as $card)
         {
             if ($card->getSuit() === $suit)
             {
-                $filteredCards[] = $card;
+                $filteredCards->add($card);
             }
         }
         return $filteredCards;

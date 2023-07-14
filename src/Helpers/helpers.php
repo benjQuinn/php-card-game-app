@@ -1,22 +1,22 @@
 <?php
 
 // PP Card Game Helpers
-
 function runPPCardGame($game): void
 {
     foreach ($game->players as $player) {
         $player->drawCards($game, 13);
     }
 
-    for ($round = 1; $round <= 27; $round++) {
+    for ($round = 1; $round < 27; $round++) {
+        // Determine who the current leader is
         $leader = $game->players[$game->whoIsLeader()];
         $opponent = $game->players[$game->whoIsNotLeader()];
 
-        $roundWinner = $game->play($leader, $opponent);
+        // Play the round
+        $game->playRound($leader, $opponent);
 
-        // displays the winner of each round
+        // Display the card played by each player
         $playedCards = $game->getPlayedCards();
-
         foreach ($playedCards as $index => $card) {
             if ($index === 0) {
                 $game->printer->printPlayedCard($leader->getPlayerNumber(), $card->getFace(), $card->getSuit());
@@ -25,16 +25,18 @@ function runPPCardGame($game): void
             }
         }
 
+        // Determine the round winner and print
+        $roundWinner = $game->decideRoundWinner($leader, $opponent, $playedCards);
         $game->printer->printRoundWinner($game->getCurrentRound(), $roundWinner, "cyan");
 
-        // round winner picks up the two played cards and adds them to their score pile
+        // The round winner picks up the two played cards and adds them to their score pile
         foreach ($playedCards as $card) {
-            // add played card to winner's score pile
             $game->players[$roundWinner]->scorePile->add($card);
-            // and remove it from the table's played cards pile
+            // Both cards are removed from the played cards score pile
             $game->playedCards->remove($card);
         }
-        // after the winner picks up the played cards from this round, each player gets a new card from the deck IF the deck is not empty
+
+        // After the winner picks up the played cards from this round, each player gets a new card from the deck IF the deck is not empty
         if (!empty($game->deck->getCards())) {
             foreach ($game->players as $player) {
                 $player->drawCards($game, 1);
@@ -42,10 +44,12 @@ function runPPCardGame($game): void
         }
     }
 
+    // Print each player's final score
     foreach ($game->players as $player) {
         $game->printer->printScore($player->getPlayerNumber(), $player->scorePile->count(), "magenta");
     }
 
+    // Game controller decides the overall winner and prints
     $game->decideWinner(...$game->players);
 
     if ($game->winner) {

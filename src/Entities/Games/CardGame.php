@@ -30,7 +30,8 @@ abstract class CardGame extends TwoPlayerGame
         $cards = $this->deck->getCards();
         $card = array_pop($cards);
 
-        if (!empty($this->deck->getCards())) {
+        if (!empty($this->deck->getCards()))
+        {
             $this->deck->remove($card);
         }
 
@@ -42,28 +43,24 @@ abstract class CardGame extends TwoPlayerGame
         return $this->currentLeader;
     }
 
-    /**
-     * Returns the player number of the player that is not the leader when called
-     * @return int
-     */
-    public function whoIsNotLeader()
+    public function whoIsNotLeader(): ?int
     {
-        foreach ($this->players as $playerNumber => $player) {
-            if ($playerNumber !== $this->currentLeader) {
-                return $playerNumber;
+        $notLeader = null;
+        foreach ($this->players as $playerNumber => $player)
+        {
+            if ($playerNumber !== $this->currentLeader)
+            {
+                $notLeader = $playerNumber;
             }
         }
+        return $notLeader;
     }
 
-    public function getPlayedCards(): array
+    public function getPlayedCards(): Pile
     {
-        return $this->playedCards->getCards();
+        return $this->playedCards;
     }
 
-    /**
-     * Returns the current round when called
-     * @return int
-     */
     public function getCurrentRound(): int
     {
         return $this->currentRound;

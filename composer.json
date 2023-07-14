@@ -14,7 +14,7 @@
             "App\\": "src/"
         },
         "files": [
-            "src/Helpers/helperFunctions.php"
+            "src/Helpers/helpers.php"
         ]
     },
     "autoload-dev": {

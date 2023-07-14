@@ -14,6 +14,7 @@ class Deck extends CardsCollection implements \IteratorAggregate
 {
     public function __construct()
     {
+        parent::__construct();
         $this->createDeck();
     }
 

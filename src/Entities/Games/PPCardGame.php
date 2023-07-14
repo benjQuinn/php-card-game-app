@@ -5,6 +5,7 @@ namespace App\Entities\Games;
 use App\Entities\Cards\Jack;
 use App\Entities\Cards\Joker;
 use App\Entities\Collections\Deck;
+use App\Entities\Collections\Hand;
 use App\Entities\Collections\Pile;
 use App\Entities\Players\CardGamePlayer;
 use App\Entities\Players\PPCardGamePlayer;
@@ -40,71 +41,72 @@ class PPCardGame extends CardGame
         return $this->currentLeader;
     }
 
-    /**
-     * Decides who is the winner when both players play their card
-     * @param PPCardGamePlayer $leader the player that is the current leader when called
-     * @param PPCardGamePlayer $opponent the player that is not the current leader when called
-     * @return int the player number of the round winner
-     */
-    public function play(CardGamePlayer $leader, CardGamePlayer $opponent): int
+    public function playRound(CardGamePlayer $leader, CardGamePlayer $opponent): void
     {
+        if ($leader->hasCards() && $opponent->hasCards())
+        {
+            $leadersCard = $leader->playCard($leader->returnHighestValueCard());
+
+            $opponentsFilteredHand = $opponent->getFilteredCards($leadersCard->getSuit(), new Hand());
+
+            if ($opponentsFilteredHand->isEmpty())
+            {
+                $opponentsCard = $opponent->playCard($opponent->returnLowestValueCard());
+            } else {
+                $opponentsCard = $opponent->filteredHand->returnLastCard();
+            }
+
+            $this->playedCards->add($leadersCard, "leader");
+            $this->playedCards->add($opponentsCard, "opponent");
+        }
         $this->currentRound++;
-        /** MB:
-         * We have some two-way tight coupling here. It is hard to see if this will be bad or not, but normally
-         * we want to avoid tight coupling. The player & PPCardGame classes are tightly coupled ond are acting on each other
-         * Ideally we want 1 actor, so its clear which class/code is in charge.
-         *
-         * I think you've got a few design challenges here:
-         * - The PPCardGame is acting as the main actor/orchestrator because we don't have 2 real humans playing
-         * - we could simulate 2 PPCardGamePlayer classes to behave like humans, and remove the central PPCardGame, but that would
-         *    be really complicated, so PPCardGame is fine.
-         * - We want to be careful when mixing state and controllers. Your PPCardGame is also acting as the "table"
-         *   which is why the players need access to it, so they can interact with the world.
-         * - We ideally want the PPCardGamePlayer class only coupled to what it needs, which is
-         *
-         */
-        // leaders Card gets added to playedCards array on playCard() call
-        $leadersPlayedCard = $leader->playCard($this);
-        $opponentsPlayedCard = $opponent->playCard($this);
-        // adds opponents played card to the playedCards pile
+    }
 
-        if ($leadersPlayedCard && $opponentsPlayedCard) {
-            $this->playedCards->add($opponentsPlayedCard);
-
-            // if leader has the highest value card they remain the leader
-            if (($leadersPlayedCard->getValue() > $opponentsPlayedCard->getValue()) || ($leadersPlayedCard instanceof Joker && $opponentsPlayedCard instanceof Jack)) {
+    public function decideRoundWinner(CardGamePlayer $leader, CardGamePlayer $opponent, Pile $playedCards): int
+    {
+        if (!$this->playedCards->isEmpty())
+        {
+            if ($playedCards->getCards()["leader"]->getValue() > $playedCards->getCards()["opponent"]->getValue() ||
+                ($playedCards->getCards()["leader"] instanceof Joker && $playedCards->getCards()["opponent"] instanceof Jack))
+            {
                 $this->currentLeader = $leader->getPlayerNumber();
             }
-            // if opponent has the highest value card they become the leader
-            if (($leadersPlayedCard->getValue() < $opponentsPlayedCard->getValue()) || ($leadersPlayedCard instanceof Jack && $opponentsPlayedCard instanceof Joker)) {
+            if ($playedCards->getCards()["leader"]->getValue() < $playedCards->getCards()["opponent"]->getValue() ||
+                ($playedCards->getCards()["leader"] instanceof Jack && $playedCards->getCards()["opponent"] instanceof Joker))
+            {
                 $this->currentLeader = $opponent->getPlayerNumber();
             }
-            // if both cards played have the same value, they are removed from the game and both players play another card
-            if ($leadersPlayedCard->getValue() === $opponentsPlayedCard->getValue()) {
-                $this->playedCards->remove($leadersPlayedCard);
-                $this->playedCards->remove($opponentsPlayedCard);
-                return $this->play($leader, $opponent);
+            if ($playedCards->getCards()["leader"]->getValue() === $playedCards->getCards()["opponent"]->getValue())
+            {
+                foreach ($playedCards as $card)
+                {
+                    $this->playedCards->remove($card);
+                }
+                $this->playRound($leader, $opponent);
+                return $this->decideRoundWinner($leader, $opponent, $this->playedCards);
             }
         }
-        // returns the winner of the round
         return $this->currentLeader;
     }
 
-    public function decideWinner(CardGamePlayer $playerOne, CardGamePlayer $playerTwo): Player|false
+    public function decideWinner(): Player|false
     {
         $scores = [];
 
-        foreach ($this->players as $player) {
+        foreach ($this->players as $player)
+        {
             $scores[] = $player->scorePile->count();
         }
 
         $winningScore = max($scores);
 
-        if ($scores[0] === $scores[1]) {
+        if ($scores[0] === $scores[1])
+        {
             $this->winner = false;
         } else {
             foreach ($this->players as $player) {
-                if ($winningScore === $player->scorePile->count()) {
+                if ($winningScore === $player->scorePile->count())
+                {
                     $this->winner = $player;
                 }
             }
