@@ -12,10 +12,10 @@ use Traversable;
 
 class Deck extends CardsCollection implements \IteratorAggregate
 {
-    public function __construct()
+    public function __construct(int $aceValue, bool $jokers = false, int $jokersNumber = 0, int $jokerValue = 0)
     {
         parent::__construct();
-        $this->createDeck();
+        $this->createDeck($aceValue, $jokers, $jokersNumber, $jokerValue);
     }
 
     public function getIterator(): Traversable
@@ -25,9 +25,13 @@ class Deck extends CardsCollection implements \IteratorAggregate
 
     /**
      * Creates a 54 deck of cards. 2-10, Ace, Jack, King Queen of each suit and two Joker cards
+     * @param int $aceValue
+     * @param bool $jokers
+     * @param int $jokersNumber
+     * @param int $jokerValue
      * @return Deck
      */
-    public function createDeck(): Deck
+    public function createDeck(int $aceValue, bool $jokers = false, int $jokersNumber = 0, int $jokerValue = 0): Deck
     {
         $suits = ["Spades", "Clubs", "Hearts", "Diamonds"];
         $faces = ["2", "3", "4", "5", "6", "7", "8", "9", "10"];
@@ -51,7 +55,7 @@ class Deck extends CardsCollection implements \IteratorAggregate
         {
             array_push(
                 $this->cards,
-                new Ace($suits[$s]),
+                new Ace($suits[$s], $aceValue),
                 new Jack($suits[$s]),
                 new Queen($suits[$s]),
                 new King($suits[$s])
@@ -59,10 +63,14 @@ class Deck extends CardsCollection implements \IteratorAggregate
         }
 
         // Add two jokers to the deck
-        for ($i = 0; $i < 2; $i++)
+        if ($jokers)
         {
-            $this->cards[] = new Joker();
+            for ($i = 0; $i < $jokersNumber; $i++)
+            {
+                $this->cards[] = new Joker($jokerValue);
+            }
         }
+
 
         return $this;
     }
