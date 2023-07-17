@@ -4,9 +4,9 @@ namespace App\Entities\Players;
 
 interface Player
 {
-    public function getName();
+    public function getName(): string;
 
-    public function getPlayerNumber();
+    public function getPlayerNumber(): int;
 
-    public function changePlayerNumber(int $number);
+    public function changePlayerNumber(int $number): Player;
 }

@@ -24,7 +24,6 @@ class PPCardGamePlayer extends CardGamePlayer
     private function setFilteredHand(CardsCollection $collection): PPCardGamePlayer
     {
         $this->filteredHand = $collection;
-
         return $this;
     }
 
@@ -33,14 +32,16 @@ class PPCardGamePlayer extends CardGamePlayer
         return $this->playerNumber;
     }
 
-    public function changePlayerNumber(int $number): void
+    public function changePlayerNumber(int $number): PPCardGamePlayer
     {
         $this->playerNumber = $number;
+        return $this;
     }
 
-    public function updateIsLeader(PPCardGame $game): void
+    public function updateIsLeader(PPCardGame $game): PPCardGamePlayer
     {
         $this->isLeader = $game->whoIsLeader() === $this->playerNumber;
+        return $this;
     }
 
     public function playCard(Card $card): Card

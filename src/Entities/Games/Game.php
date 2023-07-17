@@ -12,5 +12,5 @@ interface Game
 
     public function getLoser(array $players): Player|false;
 
-    public function setUp(): void;
+    public function setUp(): Game;
 }

@@ -2,6 +2,7 @@
 
 namespace App\Entities\Games;
 
+use App\Entities\Cards\Card;
 use App\Entities\Collections\Deck;
 use App\Entities\Collections\Pile;
 use App\Entities\Printers\Printer;
@@ -22,7 +23,7 @@ abstract class CardGame extends TwoPlayerGame
         $this->playedCards = $pile;
     }
 
-    public function draw()
+    public function draw(): Card
     {
         // Returns the top card of the deck
         $cards = $this->deck->getCards();

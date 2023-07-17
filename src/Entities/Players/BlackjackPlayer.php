@@ -44,10 +44,12 @@ class BlackjackPlayer extends CardGamePlayer
         return $this->handValue;
     }
 
-    public function drawCards(CardGame $game, int $cards): void
+    public function drawCards(CardGame $game, int $cards): BlackjackPlayer
     {
         parent::drawCards($game, $cards);
         $this->calculateHandValue()->check();
+
+        return $this;
     }
 
     public function hit(CardGame $game): BlackjackPlayer

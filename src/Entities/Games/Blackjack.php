@@ -9,13 +9,13 @@ use App\Entities\Printers\Printer;
 
 class Blackjack extends CardGame
 {
-    public function setUp(): void
+    public function setUp(): Blackjack
     {
         // Remove cards from playedCards pile
         $this->playedCards->removeAllCards();
         // Remove all cards from Deck and instantiate
-        $this->deck->removeAllCards();
-        $this->deck->createDeck();
-        $this->deck->shuffle();
+        $this->deck->removeAllCards()->createDeck()->shuffle();
+
+        return $this;
     }
 }

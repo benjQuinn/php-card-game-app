@@ -24,12 +24,11 @@ class PPCardGame extends CardGame
         $this->pregame = $pregame;
     }
 
-    public function setUp(): void
+    public function setUp(): PPCardGame
     {
         $this->deck->shuffle();
 
-        $this->pregame->play(...$this->players);
-        $winner = $this->pregame->getWinner();
+        $winner = $this->pregame->play(...$this->players)->getWinner();
 
         // set the players in the array, indexed by their player number, as determined by the pregame
         $this->players = [
@@ -38,6 +37,8 @@ class PPCardGame extends CardGame
         ];
 
         $this->currentLeader = $winner->getPlayerNumber();
+
+        return $this;
     }
 
     public function whoIsLeader(): int
@@ -63,7 +64,7 @@ class PPCardGame extends CardGame
         return $this->currentRound;
     }
 
-    public function playRound(PPCardGamePlayer $leader, PPCardGamePlayer $opponent): void
+    public function playRound(PPCardGamePlayer $leader, PPCardGamePlayer $opponent): PPCardGame
     {
         if ($leader->hasCards() && $opponent->hasCards())
         {
@@ -78,10 +79,11 @@ class PPCardGame extends CardGame
                 $opponentsCard = $opponent->filteredHand->returnLastCard();
             }
 
-            $this->playedCards->add($leadersCard, "leader");
-            $this->playedCards->add($opponentsCard, "opponent");
+            $this->playedCards->add($leadersCard, "leader")->add($opponentsCard, "opponent");
         }
         $this->currentRound++;
+
+        return $this;
     }
 
     public function decideRoundWinner(PPCardGamePlayer $leader, PPCardGamePlayer $opponent, Pile $playedCards): int
@@ -104,8 +106,7 @@ class PPCardGame extends CardGame
                 {
                     $this->playedCards->remove($card);
                 }
-                $this->playRound($leader, $opponent);
-                return $this->decideRoundWinner($leader, $opponent, $this->playedCards);
+                return $this->playRound($leader, $opponent)->decideRoundWinner($leader, $opponent, $this->playedCards);
             }
         }
         return $this->currentLeader;

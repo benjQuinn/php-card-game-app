@@ -27,16 +27,20 @@ abstract class CardGamePlayer implements Player
         return $this->playerNumber;
     }
 
-    public function drawCards(CardGame $game, int $cards): void
+    public function drawCards(CardGame $game, int $cards): CardGamePlayer
     {
         for ($i = 0; $i < $cards; $i++)
         {
             $this->hand->add($game->draw());
         }
+
+        return $this;
     }
 
-    public function changePlayerNumber(int $number): void
+    public function changePlayerNumber(int $number): CardGamePlayer
     {
         $this->playerNumber = $number;
+
+        return $this;
     }
 }

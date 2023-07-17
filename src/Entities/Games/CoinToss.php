@@ -10,12 +10,14 @@ class CoinToss extends TwoPlayerGame
     private array $coin = ["heads", "tails"];
     private string $toss;
 
-    public function setUp(): void
+    public function setUp(): CoinToss
     {
         $this->toss = $this->coin[rand(0, 1)];
+
+        return $this;
     }
 
-    public function play(Player $firstPlayer, Player $secondPlayer): void
+    public function play(Player $firstPlayer, Player $secondPlayer): CoinToss
     {
         $this->setUp();
 
@@ -38,6 +40,8 @@ class CoinToss extends TwoPlayerGame
         {
             $this->play($firstPlayer, $secondPlayer);
         }
+
+        return $this;
     }
 
     public function getWinner(): Player

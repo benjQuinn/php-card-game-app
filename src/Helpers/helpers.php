@@ -67,8 +67,7 @@ function startPPCardGame_CLI($game): void
     $randomColour = array_rand($game->printer->getColours());
     $game->printer->print($game->getName(), $randomColour);
 
-    $game->printer->printLineBr();
-    $game->printer->printLineBr();
+    $game->printer->printLineBr()->printLineBr();
 
     $game->setUp();
 
@@ -84,8 +83,7 @@ function startPPCardGame_CLI($game): void
 
     $game->printer->printPregameWinner($game->pregame->getWinner()->getName(), $game->pregame->getLoser($game->players)->getName(), $game->pregame->name);
 
-    $game->printer->printLineBr();
-    $game->printer->printLineBr();
+    $game->printer->printLineBr()->printLineBr();
 
     $game->printer->printStartGame("green");
 

@@ -27,13 +27,15 @@ class RPS extends TwoPlayerGame
         return $rps[$randomIndex];
     }
 
-    public function setUp(): void
+    public function setUp(): RPS
     {
         $this->firstPlayerRPS = $this->generateRockPaperScissors();
         $this->secondPlayerRPS = $this->generateRockPaperScissors();
+
+        return $this;
     }
 
-    public function play(Player $firstPlayer, Player $secondPlayer): void
+    public function play(Player $firstPlayer, Player $secondPlayer): RPS
     {
         $this->setUp();
 
@@ -51,6 +53,8 @@ class RPS extends TwoPlayerGame
             $secondPlayer->changePlayerNumber(1);
             $firstPlayer->changePlayerNumber(2);
         }
+
+        return $this;
     }
 
     public function getWinner(): Player
