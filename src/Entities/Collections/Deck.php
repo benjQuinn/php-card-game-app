@@ -41,25 +41,23 @@ class Deck extends CardsCollection implements \IteratorAggregate
         {
             for ($s = 0; $s < count($suits); $s++)
             {
-                $this->cards[] = new Numeral(
+                $this->add(new Numeral(
                     [
                         "suit" => $suits[$s],
                         "face" => $faces[$f],
                         "value" => intval($faces[$f]),
-                    ]);
+                    ]));
             }
         }
 
         // Add ace and court cards for each suit to the deck
         for ($s = 0; $s < count($suits); $s++)
         {
-            array_push(
-                $this->cards,
-                new Ace($suits[$s], $aceValue),
-                new Jack($suits[$s]),
-                new Queen($suits[$s]),
-                new King($suits[$s])
-            );
+            $this
+                ->add(new Ace($suits[$s], $aceValue))
+                ->add(new Jack($suits[$s]))
+                ->add(new Queen($suits[$s]))
+                ->add(new King($suits[$s]));
         }
 
         // Add two jokers to the deck
@@ -67,10 +65,9 @@ class Deck extends CardsCollection implements \IteratorAggregate
         {
             for ($i = 0; $i < $jokersNumber; $i++)
             {
-                $this->cards[] = new Joker($jokerValue);
+                $this->add(new Joker($jokerValue));
             }
         }
-
 
         return $this;
     }
