@@ -21,9 +21,11 @@ class PPCardGamePlayer extends CardGamePlayer
         $this->scorePile = $pile;
     }
 
-    private function setFilteredHand(CardsCollection $collection): void
+    private function setFilteredHand(CardsCollection $collection): PPCardGamePlayer
     {
         $this->filteredHand = $collection;
+
+        return $this;
     }
 
     public function getPlayerNumber(): int
@@ -66,8 +68,13 @@ class PPCardGamePlayer extends CardGamePlayer
 
     public function getFilteredCards(string $suit, CardsCollection $collection): CardsCollection
     {
-        $this->setFilteredHand($collection);
-        $this->filteredHand->filter($suit);
+        $cards = $this->setFilteredHand($collection)->filteredHand->filter($suit);
+
+        foreach ($cards as $card)
+        {
+            $this->filteredHand->add($card);
+        }
+
         return $this->filteredHand;
     }
 }
