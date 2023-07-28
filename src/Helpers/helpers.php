@@ -17,8 +17,9 @@ function runPPCardGame($game): void
 
         // Display the card played by each player
         $playedCards = $game->getPlayedCards();
+
         foreach ($playedCards as $index => $card) {
-            if ($index === 0) {
+            if ($index === "leader") {
                 $game->printer->printPlayedCard($leader->getPlayerNumber(), $card->getFace(), $card->getSuit());
             } else {
                 $game->printer->printPlayedCard($opponent->getPlayerNumber(), $card->getFace(), $card->getSuit());
