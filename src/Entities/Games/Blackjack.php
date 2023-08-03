@@ -32,44 +32,6 @@ class Blackjack extends CardGame
         return $this;
     }
 
-//    public function decideRoundWinner(BlackjackPlayer $playerOne, BlackjackPlayer $playerTwo): int|false
-//    {
-//        // Draw conditions
-//        if ($playerOne->isBust() && $playerTwo->isBust() || $playerOne->isBlackjack() && $playerTwo->isBlackjack())
-//        {
-//            $this->winner = false;
-//        } else if ($playerOne->isBlackjack() || $playerTwo->isBust()) {
-//            $this->winner = $playerOne;
-//        } else if ($playerTwo->isBlackjack() || $playerOne->isBust()) {
-//            $this->winner = $playerTwo;
-//        } else {
-//            // If no bust or blackjack, find the player whose score is closest to 21
-//            $handValues = [$playerOne->getHandValue(), $playerTwo->getHandValue()];
-//
-//            $values = [];
-//            foreach ($handValues as $handValue) {
-//                $value = self::BLACKJACK - $handValue;
-//                $values[] = $value;
-//                var_dump($this->players);
-//            }
-//            if ($values[0] === $values[1]) {
-//                $this->winner = false;
-//            }
-//
-//            $winningValue = max($values);
-//            var_dump($winningValue);
-//            $players = [$playerOne, $playerTwo];
-//
-//
-//                foreach ($players as $player) {
-//                    if (($winningValue + self::BLACKJACK) === $player->getHandValue()) {
-//                        var_dump($winningValue);
-//                        $this->winner = $player;
-//                    }
-//                }
-//
-//        }
-
         public function decideRoundWinner(): int|false
     {
         $playerOne = $this->players[1];
