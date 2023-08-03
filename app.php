@@ -3,19 +3,22 @@
 use App\Entities\Collections\Deck;
 use App\Entities\Collections\Hand;
 use App\Entities\Collections\Pile;
+use App\Entities\Games\Blackjack;
 use App\Entities\Games\PPCardGame;
+use App\Entities\Players\BlackjackPlayer;
 use App\Entities\Players\PPCardGamePlayer;
 use App\Entities\Games\CoinToss;
 use App\Entities\Games\RPS;
+use App\Entities\Printers\BlackjackCLIPrinter;
 use App\Entities\Printers\PPCardGameCLIPrinter;
 
 const APP_ROOT = __DIR__;
 require_once APP_ROOT . '/vendor/autoload.php';
 
 // PP Card Game Setup
-$printer = new PPCardGameCLIPrinter();
+$PPCardGamePrinter = new PPCardGameCLIPrinter();
 
-$players = [
+$PPCardGamePlayers = [
     new PPCardGamePlayer("Ben", new Hand(), new Pile()),
     new PPCardGamePlayer("Mani", new Hand(), new Pile()),
     new PPCardGamePlayer("Aidan", new Hand(), new Pile()),
@@ -25,10 +28,18 @@ $players = [
     new PPCardGamePlayer("Annesley", new Hand(), new Pile())
 ];
 
-$randIndexOne = rand(0, count($players) - 1);
+$randIndexOne = rand(0, count($PPCardGamePlayers) - 1);
 do {
-    $randIndexTwo = rand(0, count($players) - 1);
+    $randIndexTwo = rand(0, count($PPCardGamePlayers) - 1);
 } while ($randIndexOne === $randIndexTwo);
+
+// Blackjack Setup
+$blackjackPrinter = new BlackjackCLIPrinter();
+
+$blackjackPlayers = [
+    new BlackjackPlayer("Ben", new Hand()),
+    new BlackjackPlayer("Mani", new Hand()),
+];
 
 $pregames = [
     new RPS(),
@@ -37,10 +48,11 @@ $pregames = [
 
 $pregame = $pregames[rand(0, count($pregames) - 1)];
 
-$game = new PPCardGame([$players[$randIndexOne], $players[$randIndexTwo]], $printer, "Procure Plus Card Game", new Deck(14, true, 2, 11), new Pile(), $pregame);
+$PPCardGame = new PPCardGame([$PPCardGamePlayers[$randIndexOne], $PPCardGamePlayers[$randIndexTwo]], "Procure Plus Card Game", new Deck(14, true, 2, 11), new Pile(), $pregame);
+$blackjack = new Blackjack($blackjackPlayers, "Blackjack", new Deck(11), new Pile(), $pregame);
 
-// Blackjack Setup
-    ///
+// Start PP Card Game
+startCardGame_CLI($PPCardGame, "runPPCardGame", 27, $PPCardGamePrinter);
 
-
-startPPCardGame_CLI($game);
+// Start Blackjack
+startCardGame_CLI($blackjack, "runBlackjack", 5, $blackjackPrinter);

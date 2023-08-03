@@ -6,12 +6,10 @@ use App\Entities\Cards\Card;
 use App\Entities\Collections\CardsCollection;
 use App\Entities\Collections\Hand;
 use App\Entities\Collections\Pile;
-use App\Entities\Games\PPCardGame;
 
 class PPCardGamePlayer extends CardGamePlayer
 {
     public Pile $scorePile;
-    protected bool $isLeader = false;
     protected int $playerNumber = 0;
     public CardsCollection $filteredHand;
 
@@ -35,12 +33,6 @@ class PPCardGamePlayer extends CardGamePlayer
     public function changePlayerNumber(int $number): PPCardGamePlayer
     {
         $this->playerNumber = $number;
-        return $this;
-    }
-
-    public function updateIsLeader(PPCardGame $game): PPCardGamePlayer
-    {
-        $this->isLeader = $game->whoIsLeader() === $this->playerNumber;
         return $this;
     }
 

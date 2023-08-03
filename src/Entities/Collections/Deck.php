@@ -24,7 +24,7 @@ class Deck extends CardsCollection implements \IteratorAggregate
     }
 
     /**
-     * Creates a 54 deck of cards. 2-10, Ace, Jack, King Queen of each suit and two Joker cards
+     * Creates a deck of cards. 2-10, Ace, Jack, King Queen of each suit and Jokers cards if passed as params
      * @param int $aceValue
      * @param bool $jokers
      * @param int $jokersNumber

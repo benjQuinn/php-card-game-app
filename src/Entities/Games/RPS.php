@@ -35,13 +35,13 @@ class RPS extends TwoPlayerGame
         return $this;
     }
 
-    public function play(Player $firstPlayer, Player $secondPlayer): RPS
+    public function playRound(Player $firstPlayer, Player $secondPlayer): RPS
     {
         $this->setUp();
 
         if ($this->firstPlayerRPS === $this->secondPlayerRPS)
         {
-            $this->play($firstPlayer, $secondPlayer);
+            $this->playRound($firstPlayer, $secondPlayer);
         } if ($this->winningConditions[$this->firstPlayerRPS] === $this->secondPlayerRPS)
         {
             $this->winner = $firstPlayer;

@@ -17,7 +17,7 @@ class CoinToss extends TwoPlayerGame
         return $this;
     }
 
-    public function play(Player $firstPlayer, Player $secondPlayer): CoinToss
+    public function playRound(Player $firstPlayer, Player $secondPlayer): CoinToss
     {
         $this->setUp();
 
@@ -38,7 +38,7 @@ class CoinToss extends TwoPlayerGame
         }
         if ($firstPlayerChoice === $this->toss && $secondPlayerChoice === $this->toss || $firstPlayerChoice !== $this->toss && $secondPlayerChoice !== $this->toss)
         {
-            $this->play($firstPlayer, $secondPlayer);
+            $this->playRound($firstPlayer, $secondPlayer);
         }
 
         return $this;

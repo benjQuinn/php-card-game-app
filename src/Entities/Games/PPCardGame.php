@@ -4,66 +4,12 @@ namespace App\Entities\Games;
 
 use App\Entities\Cards\Jack;
 use App\Entities\Cards\Joker;
-use App\Entities\Collections\Deck;
 use App\Entities\Collections\Hand;
 use App\Entities\Collections\Pile;
 use App\Entities\Players\PPCardGamePlayer;
-use App\Entities\Players\Player;
-use App\Entities\Printers\Printer;
 
 class PPCardGame extends CardGame
 {
-    public Game $pregame;
-    public int $currentLeader = 0;
-    protected int $currentRound = 0;
-
-    public function __construct(array $players, Printer $printer, string $name, Deck $deck, Pile $pile, TwoPlayerGame $pregame)
-    {
-
-        parent::__construct($players, $printer, $name, $deck, $pile);
-        $this->pregame = $pregame;
-    }
-
-    public function setUp(): PPCardGame
-    {
-        $this->deck->shuffle();
-
-        $winner = $this->pregame->play(...$this->players)->getWinner();
-
-        // set the players in the array, indexed by their player number, as determined by the pregame
-        $this->players = [
-            $this->players[0]->getPlayerNumber() => $this->players[0],
-            $this->players[1]->getPlayerNumber() => $this->players[1]
-        ];
-
-        $this->currentLeader = $winner->getPlayerNumber();
-
-        return $this;
-    }
-
-    public function whoIsLeader(): int
-    {
-        return $this->currentLeader;
-    }
-
-    public function whoIsNotLeader(): ?int
-    {
-        $notLeader = null;
-        foreach ($this->players as $playerNumber => $player)
-        {
-            if ($playerNumber !== $this->currentLeader)
-            {
-                $notLeader = $playerNumber;
-            }
-        }
-        return $notLeader;
-    }
-
-    public function getCurrentRound(): int
-    {
-        return $this->currentRound;
-    }
-
     public function playRound(PPCardGamePlayer $leader, PPCardGamePlayer $opponent): PPCardGame
     {
         if ($leader->hasCards() && $opponent->hasCards())
@@ -112,7 +58,7 @@ class PPCardGame extends CardGame
         return $this->currentLeader;
     }
 
-    public function decideWinner(): Player|false
+    public function decideWinner(): PPCardGamePlayer|false
     {
         $scores = [];
 

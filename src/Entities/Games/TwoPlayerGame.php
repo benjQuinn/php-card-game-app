@@ -7,7 +7,7 @@ use App\Entities\Players\Player;
 abstract class TwoPlayerGame implements Game
 {
     protected string $name;
-    public Player|false $winner;
+    public Player|false $winner = false;
 
     public function getName(): string
     {
